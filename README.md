@@ -1,3 +1,4 @@
-# Pipeline
+pipeline
+========
 
-** TODO: Add description **
+Continuous Delivery Pipeline builder built in Elixir
