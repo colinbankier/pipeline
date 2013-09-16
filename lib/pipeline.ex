@@ -3,10 +3,13 @@ defmodule Pipeline do
   defrecord Task, cmd: nil
 
   def run(pipe) do
-    Enum.map pipe, fn task ->
+    pipe 
+    |> List.flatten
+    |> Enum.map fn task ->
       [
         cmd: task.cmd,
-        output: System.cmd(task.cmd)
+        output: System.cmd(task.cmd),
+        status: :success
       ]
     end
   end
