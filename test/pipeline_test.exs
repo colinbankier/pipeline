@@ -10,9 +10,9 @@ defmodule PipelineTest do
     ]
 
     expected_result = [
-      task_result("echo \"1\"", "1\n"),
-      task_result("echo \"2\"", "2\n"),
-      task_result("echo \"3\"", "3\n")
+      task_result("1\n"),
+      task_result("2\n"),
+      task_result("3\n")
     ]
     assert Pipeline.run(pipe) == expected_result
   end
@@ -29,11 +29,11 @@ defmodule PipelineTest do
     ]
 
     expected_result = [
-      task_result("echo \"1\"", "1\n"),
-      task_result("echo \"2a\"", "2a\n"),
-      task_result("echo \"2b\"", "2b\n"),
-      task_result("echo \"2c\"", "2c\n"),
-      task_result("echo \"3\"", "3\n")
+      task_result("1\n"),
+      task_result("2a\n"),
+      task_result("2b\n"),
+      task_result("2c\n"),
+      task_result("3\n")
     ]
     assert Pipeline.run(pipe) == expected_result
   end
@@ -46,7 +46,7 @@ defmodule PipelineTest do
     pipe = [ create_task(command) ]
 
     expected_result = [
-        task_result(command, "1\n2\n")
+        task_result("1\n2\n")
     ]
     assert Pipeline.run(pipe) == expected_result
   end
@@ -56,7 +56,17 @@ defmodule PipelineTest do
     pipe = [ create_task(command) ]
 
     expected_result = [
-        task_result(command, "", :success)
+        task_result("", :ok)
+    ]
+    assert Pipeline.run(pipe) == expected_result
+  end
+
+  test "result has failed status if exit status 1" do
+    command = "exit 1"
+    pipe = [ create_task(command) ]
+
+    expected_result = [
+        task_result("", :error)
     ]
     assert Pipeline.run(pipe) == expected_result
   end
@@ -65,9 +75,8 @@ defmodule PipelineTest do
     Task.new cmd: cmd
   end
 
-  def task_result(command, output, status // :success) do
+  def task_result(output, status // :ok) do
     [
-      cmd: command,
       output: output,
       status: status
     ]

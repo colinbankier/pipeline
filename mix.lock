@@ -1,0 +1,2 @@
+[ "erlsh": {:git, "git://github.com/proger/erlsh.git", "490aa8f2ce80810d7aa3c0125c9fb34706004d70", [{:ref, "master"}]},
+  "exec": {:git, "git://github.com/saleyn/erlexec.git", "a84d95f46422163c24ffef7a123efe9b15d56253", [{:ref, "a84d95f46422163c24ffef7a123efe9b15d56253"}]} ]
