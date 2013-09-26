@@ -51,7 +51,7 @@ defmodule PipelineTest do
     assert Pipeline.run(pipe) == expected_result
   end
 
-  test "result has success status if exit status 0" do
+  test "result has ok status if exit status 0" do
     command = "exit 0"
     pipe = [ create_task(command) ]
 
@@ -61,12 +61,25 @@ defmodule PipelineTest do
     assert Pipeline.run(pipe) == expected_result
   end
 
-  test "result has failed status if exit status 1" do
+  test "result has error status if exit status 1" do
     command = "exit 1"
     pipe = [ create_task(command) ]
 
     expected_result = [
         task_result("", :error)
+    ]
+    assert Pipeline.run(pipe) == expected_result
+  end
+
+  test "result has not started status if predecessor fails" do
+    pipe = [
+      create_task("exit 1"),
+      create_task("echo \"3\"")
+    ]
+
+    expected_result = [
+      task_result("", :error),
+      task_result(nil, :not_started )
     ]
     assert Pipeline.run(pipe) == expected_result
   end
