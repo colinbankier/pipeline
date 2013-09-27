@@ -2,9 +2,10 @@ defmodule Pipeline.Mixfile do
   use Mix.Project
 
   def project do
-    [ 
+    [
       app: :pipeline,
       version: "0.0.1",
+      elixir: "~> 0.10.2",
       deps: deps
     ]
   end
@@ -17,7 +18,7 @@ defmodule Pipeline.Mixfile do
   end
 
   defp deps do
-    [ 
+    [
       { :weber, github: "0xAX/weber" },
       {:exec, "v1.0-84-ga84d95f", [github: "saleyn/erlexec", app: "ebin/exec.app", 
       ref: "a84d95f46422163c24ffef7a123efe9b15d56253"]}
