@@ -1,4 +1,4 @@
-defmodule Pipeline do
+defmodule PipelineRunner do
 
   defrecord Task, cmd: nil
 

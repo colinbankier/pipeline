@@ -1,6 +1,6 @@
 defmodule PipelineTest do
   use ExUnit.Case
-  alias Pipeline.Task
+  alias PipelineRunner.Task
 
   test "runs sequence of tasks" do
     pipe = [
@@ -14,7 +14,7 @@ defmodule PipelineTest do
       task_result("2\n"),
       task_result("3\n")
     ]
-    assert Pipeline.run(pipe) == expected_result
+    assert PipelineRunner.run(pipe) == expected_result
   end
 
   test "runs nested tasks" do
@@ -35,7 +35,7 @@ defmodule PipelineTest do
       task_result("2c\n"),
       task_result("3\n")
     ]
-    assert Pipeline.run(pipe) == expected_result
+    assert PipelineRunner.run(pipe) == expected_result
   end
 
   test "runs mulitline command" do
@@ -48,7 +48,7 @@ defmodule PipelineTest do
     expected_result = [
         task_result("1\n2\n")
     ]
-    assert Pipeline.run(pipe) == expected_result
+    assert PipelineRunner.run(pipe) == expected_result
   end
 
   test "result has ok status if exit status 0" do
@@ -58,7 +58,7 @@ defmodule PipelineTest do
     expected_result = [
         task_result("", :ok)
     ]
-    assert Pipeline.run(pipe) == expected_result
+    assert PipelineRunner.run(pipe) == expected_result
   end
 
   test "result has error status if exit status 1" do
@@ -68,7 +68,7 @@ defmodule PipelineTest do
     expected_result = [
         task_result("", :error)
     ]
-    assert Pipeline.run(pipe) == expected_result
+    assert PipelineRunner.run(pipe) == expected_result
   end
 
   test "result has not started status if predecessor fails" do
@@ -81,7 +81,7 @@ defmodule PipelineTest do
       task_result("", :error),
       task_result(nil, :not_started )
     ]
-    assert Pipeline.run(pipe) == expected_result
+    assert PipelineRunner.run(pipe) == expected_result
   end
 
   def create_task(cmd) do
