@@ -5,3 +5,6 @@ erl_crash.dump
 *.beam
 tmp/
 logs/
+acceptance_tests/gems
+.DS_Store
+acceptance_tests/bin
