@@ -7,4 +7,4 @@
   "pgsql": {:git, "git://github.com/ericmj/pgsql.git", "ac8c0f65098d8d5ffafa613f54945ebfa7377983", [{:branch, "elixir"}]},
   "poolboy": {:git, "git://github.com/devinus/poolboy.git", "91b68de43d49bcccf2631016febda70b20d7aa75", []},
   "ranch": {:git, "git://github.com/extend/ranch.git", "41705752ffc7e3ecb96eef8374015ead4ca7f699", [{:ref, "0.8.5"}]},
-  "weber": {:git, "git://github.com/0xAX/weber.git", "23531162cd671b3fac38322422e4a339bab849b9", []} ]
+  "weber": {:git, "git://github.com/0xAX/weber.git", "2459f5421885f34f3f8c0af4ce798146b4185e83", []} ]
