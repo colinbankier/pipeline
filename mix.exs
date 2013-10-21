@@ -18,9 +18,9 @@ defmodule Pipeline.Mixfile do
   end
 
   defp deps do
-    [
-      #{ :weber, path: "../weber" }, # github: "0xAX/weber"
-      { :weber, github: "0xAX/weber" },
+    [ { :postgrex, github: "ericmj/postgrex" },
+      { :weber, path: "../weber" }, # github: "0xAX/weber"
+      #{ :weber, github: "0xAX/weber" },
       {:exec, "v1.0-84-ga84d95f", [github: "saleyn/erlexec", app: "ebin/exec.app", 
       ref: "a84d95f46422163c24ffef7a123efe9b15d56253"]}
     ]
