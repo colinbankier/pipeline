@@ -20,7 +20,7 @@ defmodule Pipeline.Dynamo do
   #   session_store: Session.CookieStore,
   #   session_options:
   #     [ key: "_pipeline_session",
-  #       secret: "XrliU5LcpQJEL03OCvLTSIDj2g4iUhd4e2oX8Ma59Va7upO6/urNnEIMoDI6OJfC"]
+  #       secret: "eXWMBEKIaizHkxuNprIJKzacRHRBKsbCieoSG/kL3sWuMNWswSj5RMnUxr/S14g9"]
 
   # Default functionality available in templates
   templates do
