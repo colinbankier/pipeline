@@ -1,10 +1,5 @@
 /ebin
 /deps
+/tmp/dev
+/tmp/test
 erl_crash.dump
-*.ez
-*.beam
-tmp/
-logs/
-acceptance_tests/gems
-.DS_Store
-acceptance_tests/bin
