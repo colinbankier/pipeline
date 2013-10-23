@@ -16,4 +16,6 @@ defmodule ApplicationRouter do
     conn = conn.assign(:title, "Welcome to Dynamo!")
     render conn, "index.html"
   end
+
+  forward "/manage", to: ManageRouter
 end
