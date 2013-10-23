@@ -17,7 +17,7 @@ defmodule ManageRouter do
   end
 
   get "pipeline/:name" do
-    conn = conn.assign(:name, conn.params[:name])
+    conn = conn.assign(:name, "My Pipeline")
     render conn, "manage/pipeline/show.html"
   end
 end
