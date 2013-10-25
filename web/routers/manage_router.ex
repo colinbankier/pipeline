@@ -12,12 +12,15 @@ defmodule ManageRouter do
   end
 
   post "pipeline/new" do
-    IO.puts "Created. #{conn.params[:name]}"
-    redirect conn, to: "/manage/pipeline/#{conn.params[:name]}"
+    pipeline = Pipeline.Pipeline.new name: conn.params[:name]
+    pipeline = Pipeline.Repo.create pipeline
+    redirect conn, to: "/manage/pipeline/#{pipeline.id}"
   end
 
-  get "pipeline/:name" do
-    conn = conn.assign(:name, "My Pipeline")
+  get "pipeline/:id" do
+    {id, _} = String.to_integer conn.params[:id]
+    pipeline = Pipeline.Repo.get Pipeline.Pipeline, id
+    conn = conn.assign(:name, pipeline.name)
     render conn, "manage/pipeline/show.html"
   end
 end
