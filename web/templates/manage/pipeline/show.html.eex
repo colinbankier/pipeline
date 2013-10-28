@@ -1,5 +1,12 @@
 <html>
 <body>
-            <%= @name %>
+            <%= @pipeline.name %>
+            <a href="/manage/pipeline/<%= @pipeline.id %>/task/new">Add Task</a>
+            <h2>Tasks</h2>
+            <ul>
+              <%= lc {name} inlist @pipeline.tasks do %>
+                <li><%= name %></li>
+              <% end %>
+            </ul>
             </body>
             </html>

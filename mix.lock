@@ -1,6 +1,6 @@
 [ "cowboy": {:git, "git://github.com/extend/cowboy.git", "bbee34fe1638b742796b00b39c0859395a752167", []},
-  "dynamo": {:git, "git://github.com/elixir-lang/dynamo.git", "de43665db0e2c1fdc58e72e250c5f10ed19a55aa", []},
-  "ecto": {:git, "git://github.com/elixir-lang/ecto.git", "caea77e1c19332b28b00261c29b597951210dc33", []},
+  "dynamo": {:git, "git://github.com/elixir-lang/dynamo.git", "162444c02fcf7d8aa1c65dcd36d02fd2e2450a24", []},
+  "ecto": {:git, "git://github.com/elixir-lang/ecto.git", "1d6f70467b80e6fecf2ab4178902394252086a70", []},
   "exec": {:git, "git://github.com/saleyn/erlexec.git", "a84d95f46422163c24ffef7a123efe9b15d56253", [{:ref, "a84d95f46422163c24ffef7a123efe9b15d56253"}]},
   "hackney": {:git, "git://github.com/benoitc/hackney.git", "5b0f7eb949ebebd6fabfbc4e08a7b7231850606a", []},
   "mimetypes": {:git, "git://github.com/spawngrid/mimetypes.git", "47d37a977a7d633199822bf6b08353007483d00f", []},
