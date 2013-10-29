@@ -20,8 +20,9 @@ defmodule ManageRouter do
   get "pipeline/:id" do
     {id, _} = Integer.parse conn.params[:id]
     pipeline = Pipeline.Repo.get Pipeline.Pipeline, id
+    tasks = Pipeline.Repo.all(pipeline.tasks)
     conn = conn.assign(:pipeline, pipeline)
-    IO.inspect pipeline.tasks
+    conn = conn.assign(:tasks, tasks)
     render conn, "manage/pipeline/show.html"
   end
 

@@ -1,12 +1,12 @@
 <html>
 <body>
-            <%= @pipeline.name %>
-            <a href="/manage/pipeline/<%= @pipeline.id %>/task/new">Add Task</a>
-            <h2>Tasks</h2>
-            <ul>
-              <%= lc {name} inlist @pipeline.tasks do %>
-                <li><%= name %></li>
-              <% end %>
-            </ul>
-            </body>
-            </html>
+<h2><%= @pipeline.name %></h2>
+<h3>Tasks</h3>
+<ul>
+<%= lc task inlist @tasks do %>
+<li><%= task.name %></li>
+<% end %>
+</ul>
+<a href="/manage/pipeline/<%= @pipeline.id %>/task/new">Add Task</a>
+</body>
+</html>
