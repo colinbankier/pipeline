@@ -4,4 +4,8 @@ defmodule Pipeline.Repo do
   def url do
     "ecto://colin.bankier:@localhost/pipeline"
   end
+
+  def priv do
+    app_dir(:pipeline, "db/migrations")
+  end
 end

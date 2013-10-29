@@ -18,7 +18,7 @@ defmodule ManageRouter do
   end
 
   get "pipeline/:id" do
-    id = Integer.parse conn.params[:id]
+    {id, _} = Integer.parse conn.params[:id]
     pipeline = Pipeline.Repo.get Pipeline.Pipeline, id
     conn = conn.assign(:pipeline, pipeline)
     IO.inspect pipeline.tasks
@@ -30,7 +30,7 @@ defmodule ManageRouter do
   end
 
   post "pipeline/:pipeline_id/task/new" do
-    pipeline_id = Integer.parse conn.params[:pipeline_id]
+    {pipeline_id, _} = Integer.parse conn.params[:pipeline_id]
     task = Pipeline.Task.new name: conn.params[:name],
       pipeline_id: pipeline_id
     task = Pipeline.Repo.create task
