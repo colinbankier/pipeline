@@ -1,5 +1,8 @@
 defmodule ManageRouter do
   use Dynamo.Router
+  alias Pipeline.Repo
+  alias Models.Pipeline
+  alias Models.Task
 
   get "/" do
     conn = conn.assign(:title, "Manage Pipelines")
@@ -12,15 +15,15 @@ defmodule ManageRouter do
   end
 
   post "pipeline/new" do
-    pipeline = Pipeline.Pipeline.new name: conn.params[:name]
-    pipeline = Pipeline.Repo.create pipeline
+    pipeline = Pipeline.new name: conn.params[:name]
+    pipeline = Repo.create pipeline
     redirect conn, to: "/manage/pipeline/#{pipeline.id}"
   end
 
   get "pipeline/:id" do
     {id, _} = Integer.parse conn.params[:id]
-    pipeline = Pipeline.Repo.get Pipeline.Pipeline, id
-    tasks = Pipeline.Repo.all(pipeline.tasks)
+    pipeline = Repo.get Pipeline, id
+    tasks = Repo.all(pipeline.tasks)
     conn = conn.assign(:pipeline, pipeline)
     conn = conn.assign(:tasks, tasks)
     render conn, "manage/pipeline/show.html"
@@ -32,9 +35,9 @@ defmodule ManageRouter do
 
   post "pipeline/:pipeline_id/task/new" do
     {pipeline_id, _} = Integer.parse conn.params[:pipeline_id]
-    task = Pipeline.Task.new name: conn.params[:name],
+    task = Task.new name: conn.params[:name],
       pipeline_id: pipeline_id
-    task = Pipeline.Repo.create task
+    task = Repo.create task
     redirect conn, to: "/manage/pipeline/#{pipeline_id}"
   end
 end
