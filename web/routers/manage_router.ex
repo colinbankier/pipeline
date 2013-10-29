@@ -1,6 +1,5 @@
 defmodule ManageRouter do
   use Dynamo.Router
-  alias Pipeline.Repo
   alias Models.Pipeline
   alias Models.Task
 

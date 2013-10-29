@@ -1,4 +1,4 @@
-defmodule Pipeline.Dynamo do
+defmodule PipelineApp.Dynamo do
   use Dynamo
 
   config :dynamo,

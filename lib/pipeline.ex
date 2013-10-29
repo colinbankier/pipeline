@@ -1,4 +1,4 @@
-defmodule Pipeline do
+defmodule PipelineApp do
   use Application.Behaviour
 
   @doc """
@@ -6,11 +6,11 @@ defmodule Pipeline do
   application and its Dynamos.
   """
   def start(_type, _args) do
-    Pipeline.Sup.start_link([])
+    PipelineApp.Supervisor.start_link([])
   end
 end
 
-defmodule Pipeline.Sup do
+defmodule PipelineApp.Supervisor do
   use Supervisor.Behaviour
 
   def start_link(stack) do
@@ -19,8 +19,8 @@ defmodule Pipeline.Sup do
 
   def init(stack) do
     tree = [
-      worker(Pipeline.Repo, []),
-      supervisor(Pipeline.Dynamo, [])
+      worker(Repo, []),
+      supervisor(PipelineApp.Dynamo, [])
       ]
     supervise(tree, strategy: :one_for_all)
   end

@@ -4,7 +4,7 @@ defmodule Pipeline.Mixfile do
   def project do
     [ app: :pipeline,
       version: "0.0.1",
-      dynamos: [Pipeline.Dynamo],
+      dynamos: [PipelineApp.Dynamo],
       compilers: [:elixir, :dynamo, :app],
       env: [prod: [compile_path: "ebin"]],
       compile_path: "tmp/#{Mix.env}/pipeline/ebin",
@@ -14,7 +14,7 @@ defmodule Pipeline.Mixfile do
   # Configuration for the OTP application
   def application do
     [ applications: [:cowboy, :dynamo, :exec, :ecto],
-      mod: { Pipeline, [] } ]
+      mod: { PipelineApp, [] } ]
   end
 
   defp deps do
