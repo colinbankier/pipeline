@@ -1,15 +1,13 @@
 defmodule PipelineRunner do
 
-  defrecord Task, cmd: nil
-
   def run(pipe) do
 
     build_result_list = fn 
       (task, result_list = [ last_result = head | tail ]) ->
-        result = run_process(Keyword.get(last_result, :status), task.cmd)
+        result = run_process(Keyword.get(last_result, :status), task.command)
         [ result | result_list ]
       (task, result_list = []) ->
-        result = run_process(:ok, task.cmd)
+        result = run_process(:ok, task.command)
         [ result | result_list ]
     end
 

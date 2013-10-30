@@ -1,6 +1,6 @@
 defmodule PipelineTest do
   use ExUnit.Case
-  alias PipelineRunner.Task
+  alias Models.Task
 
   test "runs sequence of tasks" do
     pipe = [
@@ -84,8 +84,8 @@ defmodule PipelineTest do
     assert PipelineRunner.run(pipe) == expected_result
   end
 
-  def create_task(cmd) do
-    Task.new cmd: cmd
+  def create_task(command) do
+    Task.new command: command
   end
 
   def task_result(output, status // :ok) do

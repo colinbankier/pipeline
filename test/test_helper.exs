@@ -1,4 +1,4 @@
-Dynamo.under_test(Pipeline.Dynamo)
+Dynamo.under_test(PipelineApp.Dynamo)
 Dynamo.Loader.enable
 ExUnit.start
 

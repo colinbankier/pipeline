@@ -22,6 +22,7 @@ defmodule Pipeline.Mixfile do
       { :dynamo, "0.1.0-dev", github: "elixir-lang/dynamo" },
       {:exec, "v1.0-84-ga84d95f", [github: "saleyn/erlexec", app: "ebin/exec.app", 
       ref: "a84d95f46422163c24ffef7a123efe9b15d56253"]},
+      { :jsex, github: "talentdeficit/jsex" },
       { :postgrex, github: "ericmj/postgrex" },
       { :ecto, github: "elixir-lang/ecto" }
     ]
