@@ -11,3 +11,11 @@ defmodule Pipeline.TestCase do
     :ok
   end
 end
+
+defmodule Pipeline.TestHelper do
+  alias Models.Task
+
+  def create_task(command) do
+    Task.new name: command, command: command
+  end
+end

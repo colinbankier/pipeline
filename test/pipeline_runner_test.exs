@@ -1,3 +1,5 @@
+import Pipeline.TestHelper
+
 defmodule PipelineTest do
   use ExUnit.Case
   alias Models.Task
@@ -19,13 +21,13 @@ defmodule PipelineTest do
 
   test "runs nested tasks" do
     pipe = [
-      create_task("echo \"1\""),
+      create_task("echo 1"),
       [
-        create_task("echo \"2a\""),
-        create_task("echo \"2b\""),
-        create_task("echo \"2c\"")
+        create_task("echo 2a"),
+        create_task("echo 2b"),
+        create_task("echo 2c")
       ],
-      create_task("echo \"3\"")
+      create_task("echo 3")
     ]
 
     expected_result = [
@@ -82,10 +84,6 @@ defmodule PipelineTest do
       task_result(nil, :not_started )
     ]
     assert PipelineRunner.run(pipe) == expected_result
-  end
-
-  def create_task(command) do
-    Task.new command: command
   end
 
   def task_result(output, status // :ok) do
