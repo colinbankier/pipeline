@@ -1,5 +1,7 @@
 defmodule PipelineRunner do
 
+  alias Models.Pipeline
+  alias Models.Task
   def run(pipe) do
 
     build_result_list = fn 
@@ -15,6 +17,14 @@ defmodule PipelineRunner do
     |> List.flatten
     |> Enum.reduce([], build_result_list)
     |> Enum.reverse
+  end
+
+  def _run(pipeline = Pipeline[]) do
+
+  end
+
+  def _run(task = Task[]) do
+
   end
 
   def run_process(:ok, command) do

@@ -5,10 +5,10 @@ defmodule PipelineTest do
   alias Models.Task
 
   test "runs sequence of tasks" do
-    pipe = [
-      create_task("echo \"1\""),
-      create_task("echo \"2\""),
-      create_task("echo \"3\"")
+    pipe = Pipline.new name: "Sequence", tasks: [
+      create_task("1"),
+      create_task("2"),
+      create_task("3")
     ]
 
     expected_result = [
@@ -20,16 +20,6 @@ defmodule PipelineTest do
   end
 
   test "runs nested tasks" do
-    pipe = [
-      create_task("echo 1"),
-      [
-        create_task("echo 2a"),
-        create_task("echo 2b"),
-        create_task("echo 2c")
-      ],
-      create_task("echo 3")
-    ]
-
     expected_result = [
       task_result("1\n"),
       task_result("2a\n"),
@@ -37,7 +27,7 @@ defmodule PipelineTest do
       task_result("2c\n"),
       task_result("3\n")
     ]
-    assert PipelineRunner.run(pipe) == expected_result
+    assert PipelineRunner.run(simple_pipeline) == expected_result
   end
 
   test "runs mulitline command" do
