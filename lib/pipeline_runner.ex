@@ -2,7 +2,26 @@ defmodule PipelineRunner do
 
   alias Models.Pipeline
   alias Models.Task
-  def run(pipe) do
+  alias Result.PipelineResult
+  alias Result.TaskResult
+
+  def start(pipe) do
+    initialize(pipe)
+  end
+
+  def initialize(pipeline = Pipeline[]) do
+    PipelineResult.new name: pipeline.name
+  end
+
+  def initialize(task = Task[]) do
+    TaskResult.new name: task.name
+  end
+
+  def run(pipeline = Pipeline[]) do
+    _run(pipeline)
+  end
+
+  def old_run(pipe) do
 
     build_result_list = fn 
       (task, result_list = [ last_result = head | tail ]) ->
@@ -20,11 +39,13 @@ defmodule PipelineRunner do
   end
 
   def _run(pipeline = Pipeline[]) do
-
+    task_results = Enum.map pipeline.tasks, &(_run(&1))
+    PipelineResult.new(name: pipeline.name, tasks: task_results)
   end
 
   def _run(task = Task[]) do
-
+    output = run_process(:ok, task.command)
+    TaskResult.new name: task.name, output: output
   end
 
   def run_process(:ok, command) do

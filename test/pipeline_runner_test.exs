@@ -2,19 +2,43 @@ import Pipeline.TestHelper
 
 defmodule PipelineTest do
   use ExUnit.Case
+  alias Models.Pipeline
   alias Models.Task
+  alias Result.TaskResult
+  alias Result.PipelineResult
+ 
+  test "initializes pipeline result" do
+    result = PipelineRunner.start(simple_pipeline)
+
+    assert result == simple_initialized_pipeline_result
+  end
+
+  test "initializes sequence of tasks" do
+    pipe = Pipeline.new name: "Sequence", tasks: [
+      create_task("1"),
+      create_task("2"),
+      create_task("3")
+      ]
+
+    expected_result = PipelineResult.new name: "Sequence", tasks: [
+      TaskResult.new(name: "Task 1", output: "", status: :not_started),
+      TaskResult.new(name: "Task 2", output: "", status: :not_started),
+      TaskResult.new(name: "Task 3", output: "", status: :not_started)
+      ]
+    assert PipelineRunner.start(pipe) == expected_result
+  end
 
   test "runs sequence of tasks" do
-    pipe = Pipline.new name: "Sequence", tasks: [
+    pipe = Pipeline.new name: "Sequence", tasks: [
       create_task("1"),
       create_task("2"),
       create_task("3")
     ]
 
-    expected_result = [
-      task_result("1\n"),
-      task_result("2\n"),
-      task_result("3\n")
+    expected_result = PipelineResult.new name: "Sequence", tasks: [
+      TaskResult.new(name: "Task 1", output: "", status: :ok),
+      TaskResult.new(name: "Task 2", output: "", status: :ok),
+      TaskResult.new(name: "Task 3", output: "", status: :ok)
     ]
     assert PipelineRunner.run(pipe) == expected_result
   end
@@ -76,10 +100,7 @@ defmodule PipelineTest do
     assert PipelineRunner.run(pipe) == expected_result
   end
 
-  def task_result(output, status // :ok) do
-    [
-      output: output,
-      status: status
-    ]
+  def task_result(number, status // :ok) do
+    TaskResult.new name: "Task " <> number, output: number <> "\n", status: status
   end
 end

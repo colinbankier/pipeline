@@ -15,6 +15,8 @@ end
 defmodule Pipeline.TestHelper do
   alias Models.Pipeline
   alias Models.Task
+  alias Result.PipelineResult
+  alias Result.TaskResult
 
   def simple_pipeline_json do
      """
@@ -50,27 +52,27 @@ defmodule Pipeline.TestHelper do
     )
   end
 
-  def simple_pipeline_execution do
-    PipelineExecution.new(name: "Simple Pipeline",
+  def simple_initialized_pipeline_result do
+    PipelineResult.new(name: "Simple Pipeline",
     status: :not_started,
     output: "",
     tasks: [
-      TaskExecution.new(name: "task 1", command: "echo 1", status: :not_started,
-    output: ""),
-      PipelineExecution.new(name: "task 2",
-    status: :not_started,
-    output: "",
+      TaskResult.new(name: "task 1", status: :not_started,
+      output: ""),
+      PipelineResult.new(name: "task 2",
+      status: :not_started,
+      output: "",
       tasks: [
-        TaskExecution.new(name: "task 2a", command: "echo 2a", status: :not_started,
-    output: ""),
-        TaskExecution.new(name: "task 2b", command: "echo 2b", status: :not_started,
-    output: ""),
-        TaskExecution.new(name: "task 2c", command: "echo 2c", status: :not_started,
-    output: ""),
+        TaskResult.new(name: "task 2a", status: :not_started,
+        output: ""),
+        TaskResult.new(name: "task 2b", status: :not_started,
+        output: ""),
+        TaskResult.new(name: "task 2c", status: :not_started,
+        output: ""),
         ]
       ),
-      TaskExecution.new(name: "task 3", command: "echo 3", status: :not_started,
-    output: "")
+      TaskResult.new(name: "task 3", status: :not_started,
+      output: "")
       ]
     )
   end
