@@ -35,7 +35,9 @@ defmodule PipelineTest do
       create_task("3")
     ]
 
-    expected_result = PipelineResult.new name: "Sequence", tasks: [
+    expected_result = PipelineResult.new name: "Sequence",
+      status: :ok, 
+      tasks: [
       TaskResult.new(name: "Task 1", output: "", status: :ok),
       TaskResult.new(name: "Task 2", output: "", status: :ok),
       TaskResult.new(name: "Task 3", output: "", status: :ok)
@@ -44,46 +46,74 @@ defmodule PipelineTest do
   end
 
   test "runs nested tasks" do
-    expected_result = [
-      task_result("1\n"),
-      task_result("2a\n"),
-      task_result("2b\n"),
-      task_result("2c\n"),
-      task_result("3\n")
-    ]
+    expected_result = PipelineResult.new(name: "Simple Pipeline",
+    status: :ok,
+    tasks: [
+      TaskResult.new(name: "task 1", status: :ok,
+      output: "1\n"),
+      PipelineResult.new(name: "task 2",
+      status: :ok,
+      tasks: [
+        TaskResult.new(name: "task 2a", status: :ok,
+        output: "2a\n"),
+        TaskResult.new(name: "task 2b", status: :ok,
+        output: "2b\n"),
+        TaskResult.new(name: "task 2c", status: :ok,
+        output: "2c\n"),
+        ]
+      ),
+      TaskResult.new(name: "task 3", status: :ok,
+      output: "3\n")
+      ]
+    )
     assert PipelineRunner.run(simple_pipeline) == expected_result
   end
 
   test "runs mulitline command" do
     command = """
-    echo "1"
-    echo "2"
+    echo 1
+    echo 2
     """
-    pipe = [ create_task(command) ]
+    pipe = Pipeline.new name: "Multiline Pipeline", tasks:
+      [ create_task(command) ]
 
-    expected_result = [
-        task_result("1\n2\n")
-    ]
+    expected_result = PipelineResult.new(name: "Multiline Pipeline",
+    status: :ok,
+    tasks: [
+      TaskResult.new(name: "task 1", status: :ok,
+      output: "1\n2\n"),
+      ]
+    )
     assert PipelineRunner.run(pipe) == expected_result
   end
 
   test "result has ok status if exit status 0" do
     command = "exit 0"
-    pipe = [ create_task(command) ]
+    pipe = Pipeline.new name: "Successful Pipeline", tasks:
+      [ create_task(command) ]
+    expected_result = PipelineResult.new(name: "Successful Pipeline",
+    status: :ok,
+    tasks: [
+      TaskResult.new(name: "task 1", status: :ok,
+      output: ""),
+      ]
+    )
 
-    expected_result = [
-        task_result("", :ok)
-    ]
     assert PipelineRunner.run(pipe) == expected_result
   end
 
   test "result has error status if exit status 1" do
     command = "exit 1"
-    pipe = [ create_task(command) ]
+    pipe = Pipeline.new name: "Failed Pipeline", tasks:
+      [ create_task(command) ]
+    expected_result = PipelineResult.new(name: "Failed Pipeline",
+    status: :error,
+    tasks: [
+      TaskResult.new(name: "task 1", status: :error,
+      output: ""),
+      ]
+    )
 
-    expected_result = [
-        task_result("", :error)
-    ]
     assert PipelineRunner.run(pipe) == expected_result
   end
 

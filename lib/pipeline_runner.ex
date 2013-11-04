@@ -40,7 +40,7 @@ defmodule PipelineRunner do
 
   def _run(pipeline = Pipeline[]) do
     task_results = Enum.map pipeline.tasks, &(_run(&1))
-    PipelineResult.new(name: pipeline.name, tasks: task_results)
+    PipelineResult.new(name: pipeline.name, status: :ok, tasks: task_results)
   end
 
   def _run(task = Task[]) do

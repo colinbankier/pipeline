@@ -55,13 +55,11 @@ defmodule Pipeline.TestHelper do
   def simple_initialized_pipeline_result do
     PipelineResult.new(name: "Simple Pipeline",
     status: :not_started,
-    output: "",
     tasks: [
       TaskResult.new(name: "task 1", status: :not_started,
       output: ""),
       PipelineResult.new(name: "task 2",
       status: :not_started,
-      output: "",
       tasks: [
         TaskResult.new(name: "task 2a", status: :not_started,
         output: ""),
