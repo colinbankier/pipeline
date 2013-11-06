@@ -105,7 +105,7 @@ defmodule PipelineTest do
   test "result has error status if exit status 1" do
     command = "exit 1"
     pipe = Pipeline.new name: "Failed Pipeline", tasks:
-      [ create_task(command) ]
+      [ Task.new(name: "Error", command: "exit 1") ]
     expected_result = PipelineResult.new(name: "Failed Pipeline",
     status: :error,
     tasks: [
@@ -118,15 +118,21 @@ defmodule PipelineTest do
   end
 
   test "result has not started status if predecessor fails" do
-    pipe = [
-      create_task("exit 1"),
-      create_task("echo \"3\"")
-    ]
+    pipe = Pipeline.new name: "Failed Pipeline", tasks: [
+      Task.new(name: "Error", command: "exit 1"),
+      Task.new(name: "Not run", command: "echo 2")
+      ]
 
-    expected_result = [
-      task_result("", :error),
-      task_result(nil, :not_started )
-    ]
+    expected_result = PipelineResult.new(name: "Failed Pipeline",
+    status: :error,
+    tasks: [
+      TaskResult.new(name: "Error", status: :error,
+      output: ""),
+      TaskResult.new(name: "Not run", status: :not_started,
+      output: ""),
+      ]
+    )
+
     assert PipelineRunner.run(pipe) == expected_result
   end
 
