@@ -17,10 +17,6 @@ defmodule PipelineRunner do
     TaskResult.new name: task.name
   end
 
-  def run(pipeline = Pipeline[]) do
-    _run(pipeline)
-  end
-
   def old_run(pipe) do
 
     build_result_list = fn 
@@ -38,14 +34,28 @@ defmodule PipelineRunner do
     |> Enum.reverse
   end
 
-  def _run(pipeline = Pipeline[]) do
-    task_results = Enum.map pipeline.tasks, &(_run(&1))
-    PipelineResult.new(name: pipeline.name, status: :ok, tasks: task_results)
+  def run(pipeline = Pipeline[]) do
+    {_, [pipeline_result | _ ]} = _run(pipeline, {:ok, []})
+    pipeline_result
   end
 
-  def _run(task = Task[]) do
-    output = run_process(:ok, task.command)
-    TaskResult.new name: task.name, output: output
+  def _run(pipeline = Pipeline[], { pipeline_status, result_list }) do
+    {status, task_results} = Enum.reduce(pipeline.tasks, {:not_started, []}, &_run/2)
+    {status, [PipelineResult.new(name: pipeline.name, status: status, tasks: task_results)]}
+  end
+
+  def _run(task = Task[], { pipeline_status, result_list }) do
+    result = run_process(last_result(result_list), task.command)
+    task_result = TaskResult.new(name: task.name, output: result[:output], status: result[:status])
+    {result[:status], [ task_result | result_list ] }
+  end
+
+  def last_result(result_list = [ last_result = head | tail ]) do
+    last_result.status
+  end
+
+  def last_result([]) do
+    :ok
   end
 
   def run_process(:ok, command) do
