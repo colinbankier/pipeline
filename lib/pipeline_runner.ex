@@ -10,7 +10,8 @@ defmodule PipelineRunner do
   end
 
   def initialize(pipeline = Pipeline[]) do
-    PipelineResult.new name: pipeline.name
+    tasks = Enum.map(pipeline.tasks, &initialize/1)
+    PipelineResult.new name: pipeline.name, tasks: tasks
   end
 
   def initialize(task = Task[]) do
@@ -24,7 +25,7 @@ defmodule PipelineRunner do
 
   def _run(pipeline = Pipeline[], { pipeline_status, result_list }) do
     {status, task_results} = Enum.reduce(pipeline.tasks, {:not_started, []}, &_run/2)
-    {status, [PipelineResult.new(name: pipeline.name, status: status, tasks: task_results)]}
+    {status, [PipelineResult.new(name: pipeline.name, status: status, tasks: Enum.reverse(task_results)) | result_list]}
   end
 
   def _run(task = Task[], { pipeline_status, result_list }) do
@@ -56,7 +57,7 @@ defmodule PipelineRunner do
   end
 
   def run_process( _ , _) do
-    [ output: nil, status: :not_started ]
+    [ output: "", status: :not_started ]
   end
 
   def build_run_result({return_code, output}) do

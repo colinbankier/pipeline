@@ -38,9 +38,9 @@ defmodule PipelineTest do
     expected_result = PipelineResult.new name: "Sequence",
       status: :ok, 
       tasks: [
-      TaskResult.new(name: "Task 1", output: "", status: :ok),
-      TaskResult.new(name: "Task 2", output: "", status: :ok),
-      TaskResult.new(name: "Task 3", output: "", status: :ok)
+      TaskResult.new(name: "Task 1", output: "1\n", status: :ok),
+      TaskResult.new(name: "Task 2", output: "2\n", status: :ok),
+      TaskResult.new(name: "Task 3", output: "3\n", status: :ok)
     ]
     assert PipelineRunner.run(pipe) == expected_result
   end
@@ -75,12 +75,12 @@ defmodule PipelineTest do
     echo 2
     """
     pipe = Pipeline.new name: "Multiline Pipeline", tasks:
-      [ create_task(command) ]
+      [ Task.new name: "Task 1", command: command ]
 
     expected_result = PipelineResult.new(name: "Multiline Pipeline",
     status: :ok,
     tasks: [
-      TaskResult.new(name: "task 1", status: :ok,
+      TaskResult.new(name: "Task 1", status: :ok,
       output: "1\n2\n"),
       ]
     )
@@ -90,11 +90,11 @@ defmodule PipelineTest do
   test "result has ok status if exit status 0" do
     command = "exit 0"
     pipe = Pipeline.new name: "Successful Pipeline", tasks:
-      [ create_task(command) ]
+      [ Task.new name: "Task 1", command: command ]
     expected_result = PipelineResult.new(name: "Successful Pipeline",
     status: :ok,
     tasks: [
-      TaskResult.new(name: "task 1", status: :ok,
+      TaskResult.new(name: "Task 1", status: :ok,
       output: ""),
       ]
     )
@@ -109,7 +109,7 @@ defmodule PipelineTest do
     expected_result = PipelineResult.new(name: "Failed Pipeline",
     status: :error,
     tasks: [
-      TaskResult.new(name: "task 1", status: :error,
+      TaskResult.new(name: "Error", status: :error,
       output: ""),
       ]
     )
