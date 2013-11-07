@@ -3,8 +3,9 @@ defmodule PipelineParser do
   alias Models.Pipeline
   alias Models.Task
 
-  def read(filename) do
-
+  def parse_file(filename) do
+    {:ok, json} = File.read filename
+    parse(json)
   end
 
   def parse(json) do

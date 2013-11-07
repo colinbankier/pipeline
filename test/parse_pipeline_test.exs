@@ -10,4 +10,10 @@ defmodule ParsePipelineTest do
 
     assert pipeline == simple_pipeline
   end
+
+  test "Parse pipeline from file" do
+    json_path = "test/resources/simple_pipeline.json"
+    { :ok, pipeline } = PipelineParser.parse_file(Path.expand(json_path))
+    assert pipeline == simple_pipeline
+  end
 end
