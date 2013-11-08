@@ -117,6 +117,22 @@ defmodule PipelineTest do
     assert PipelineRunner.run(pipe) == expected_result
   end
 
+  test "should capture stderr" do
+    pipe = Pipeline.new name: "Failed Pipeline", tasks: [
+      Task.new(name: "Error", command: "echo foo; echo bar 1>&2; exit 1")
+      ]
+
+    expected_result = PipelineResult.new(name: "Failed Pipeline",
+    status: :error,
+    tasks: [
+      TaskResult.new(name: "Error", status: :error,
+      output: "foo\nbar\n"),
+      ]
+    )
+
+    assert PipelineRunner.run(pipe) == expected_result
+  end
+
   test "result has not started status if predecessor fails" do
     pipe = Pipeline.new name: "Failed Pipeline", tasks: [
       Task.new(name: "Error", command: "exit 1"),

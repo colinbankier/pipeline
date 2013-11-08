@@ -52,7 +52,7 @@ defmodule PipelineRunner do
   end
 
   def run_process(:ok, command) do
-    :exec.run(String.to_char_list!(command), [:stdout, :sync])
+    :exec.run(String.to_char_list!(command), [:stdout, :stderr, :sync])
     |> build_run_result
   end
 
@@ -62,7 +62,7 @@ defmodule PipelineRunner do
 
   def build_run_result({return_code, output}) do
     [
-        output: single_string(Keyword.get(output, :stdout)),
+        output: single_string(Keyword.get(output, :stdout)) <> single_string(Keyword.get(output, :stderr)),
         status: return_code
     ]
   end
