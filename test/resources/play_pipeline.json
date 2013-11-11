@@ -1,13 +1,13 @@
 { "name": "Supporter",
   "tasks": [
-    { "name": "task 1", "command": "cd ~/Code/supporter; ls" },
+    { "name": "task 1", "command": "cd ~/Code/supporter; rbenv local 1.9.3-p194; which rbenv; ruby --version; echo $PATH" },
     { "name": "task 2",
       "tasks": [
-        { "name": "task 2a", "command": "cd ~/Code/supporter; echo migrate; bin/rake -T" },
+        { "name": "task 2a", "command": "cd ~/Code/supporter; PATH=/Users/colin.bankier/.rbenv/shims:$PATH; echo migrate; bin/rake -T" },
         { "name": "task 2b", "command": "echo 2b" },
         { "name": "task 2c", "command": "echo 2c" }
       ]
     },
-    { "name": "task 3", "command": "cd ~/Code/supporter; bin/rake test spec:features" }
+    { "name": "task 3", "command": "cd ~/Code/supporter; rbenv local 1.9.3-p194; PATH=/Users/colin.bankier/.rbenv/shims:$PATH; bin/rake test spec:features" }
   ]
 }

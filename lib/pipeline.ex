@@ -8,6 +8,10 @@ defmodule PipelineApp do
   def start(_type, _args) do
     PipelineApp.Supervisor.start_link([])
   end
+
+  def default_working_dir do
+    Path.join(System.get_env("HOME"), ".pipeline")
+  end
 end
 
 defmodule PipelineApp.Supervisor do

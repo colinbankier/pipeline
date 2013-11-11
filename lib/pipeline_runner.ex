@@ -52,7 +52,8 @@ defmodule PipelineRunner do
   end
 
   def run_process(:ok, command) do
-    :exec.run(String.to_char_list!(command), [:stdout, :stderr, :sync])
+    working_dir = PipelineApp.default_working_dir |> String.to_char_list!
+    :exec.run(String.to_char_list!(command), [:stdout, :stderr, :sync, {:cd, working_dir}])
     |> build_run_result
   end
 

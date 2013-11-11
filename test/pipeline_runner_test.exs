@@ -133,6 +133,17 @@ defmodule PipelineTest do
     assert PipelineRunner.run(pipe) == expected_result
   end
 
+  test "working directory defaults to .pipeline" do
+    pipe = Pipeline.new name: "Working Dir", tasks: [
+      Task.new(name: "Working Dir", command: "pwd" )
+      ]
+
+    pipeline_result = pipe |> PipelineRunner.run
+    output = Enum.first(pipeline_result.tasks).output
+
+    assert output == Path.join(System.get_env("HOME"), ".pipeline") <> "\n"
+  end
+
   test "result has not started status if predecessor fails" do
     pipe = Pipeline.new name: "Failed Pipeline", tasks: [
       Task.new(name: "Error", command: "exit 1"),
