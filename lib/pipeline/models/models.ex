@@ -1,4 +1,4 @@
 defmodule Models do
-  defrecord Pipeline, name: nil, tasks: []
-  defrecord Task, name: nil, command: nil
+  defrecord Pipeline, id: nil, name: nil, tasks: []
+  defrecord Task, id: nil, name: nil, command: nil
 end

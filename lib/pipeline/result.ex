@@ -1,4 +1,4 @@
 defmodule Result do
-  defrecord PipelineResult, name: nil, status: :not_started, tasks: []
-  defrecord TaskResult, name: nil, status: :not_started, output: ""
+  defrecord PipelineResult, id: nil, name: nil, status: :not_started, tasks: []
+  defrecord TaskResult, id: nil, name: nil, status: :not_started, output: ""
 end
