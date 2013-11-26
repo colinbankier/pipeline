@@ -20,7 +20,7 @@ defmodule PipelineTest do
       create_task("3")
       ]
 
-    expected_result = PipelineResult.new name: "Sequence", tasks: [
+    expected_result = PipelineResult.new id: 1, name: "Sequence", tasks: [
       TaskResult.new(name: "Task 1", output: "", status: :not_started),
       TaskResult.new(name: "Task 2", output: "", status: :not_started),
       TaskResult.new(name: "Task 3", output: "", status: :not_started)
@@ -35,23 +35,24 @@ defmodule PipelineTest do
       create_task("3")
     ]
 
-    expected_result = PipelineResult.new name: "Sequence",
+    expected_result = PipelineResult.new id: 1, name: "Sequence",
       status: :ok, 
       tasks: [
       TaskResult.new(name: "Task 1", output: "1\n", status: :ok),
       TaskResult.new(name: "Task 2", output: "2\n", status: :ok),
       TaskResult.new(name: "Task 3", output: "3\n", status: :ok)
     ]
-    assert PipelineRunner.run(pipe) == expected_result
+    pipe |> PipelineRunner.run
+    assert poll_until_complete == expected_result
   end
 
   test "runs nested tasks" do
-    expected_result = PipelineResult.new(name: "Simple Pipeline",
+    expected_result = PipelineResult.new(id: 1, name: "Simple Pipeline",
     status: :ok,
     tasks: [
       TaskResult.new(name: "task 1", status: :ok,
       output: "1\n"),
-      PipelineResult.new(name: "task 2",
+      PipelineResult.new(id: 1, name: "task 2",
       status: :ok,
       tasks: [
         TaskResult.new(name: "task 2a", status: :ok,
@@ -67,6 +68,8 @@ defmodule PipelineTest do
       ]
     )
     assert PipelineRunner.run(simple_pipeline) == expected_result
+    simple_pipeline |> PipelineRunner.run
+    assert poll_until_complete == expected_result
   end
 
   test "runs mulitline command" do
@@ -77,7 +80,7 @@ defmodule PipelineTest do
     pipe = Pipeline.new name: "Multiline Pipeline", tasks:
       [ Task.new name: "Task 1", command: command ]
 
-    expected_result = PipelineResult.new(name: "Multiline Pipeline",
+    expected_result = PipelineResult.new(id: 1, name: "Multiline Pipeline",
     status: :ok,
     tasks: [
       TaskResult.new(name: "Task 1", status: :ok,
@@ -91,7 +94,7 @@ defmodule PipelineTest do
     command = "exit 0"
     pipe = Pipeline.new name: "Successful Pipeline", tasks:
       [ Task.new name: "Task 1", command: command ]
-    expected_result = PipelineResult.new(name: "Successful Pipeline",
+    expected_result = PipelineResult.new(id: 1, name: "Successful Pipeline",
     status: :ok,
     tasks: [
       TaskResult.new(name: "Task 1", status: :ok,
@@ -106,7 +109,7 @@ defmodule PipelineTest do
     command = "exit 1"
     pipe = Pipeline.new name: "Failed Pipeline", tasks:
       [ Task.new(name: "Error", command: "exit 1") ]
-    expected_result = PipelineResult.new(name: "Failed Pipeline",
+    expected_result = PipelineResult.new(id: 1, name: "Failed Pipeline",
     status: :error,
     tasks: [
       TaskResult.new(name: "Error", status: :error,
@@ -122,7 +125,7 @@ defmodule PipelineTest do
       Task.new(name: "Error", command: "echo foo; echo bar 1>&2; exit 1")
       ]
 
-    expected_result = PipelineResult.new(name: "Failed Pipeline",
+    expected_result = PipelineResult.new(id: 1, name: "Failed Pipeline",
     status: :error,
     tasks: [
       TaskResult.new(name: "Error", status: :error,
@@ -130,7 +133,8 @@ defmodule PipelineTest do
       ]
     )
 
-    assert PipelineRunner.run(pipe) == expected_result
+    pipe |> PipelineRunner.run
+    assert poll_until_complete == expected_result
   end
 
   test "working directory defaults to .pipeline" do
@@ -150,7 +154,7 @@ defmodule PipelineTest do
       Task.new(name: "Not run", command: "echo 2")
       ]
 
-    expected_result = PipelineResult.new(name: "Failed Pipeline",
+    expected_result = PipelineResult.new(id: 1, name: "Failed Pipeline",
     status: :error,
     tasks: [
       TaskResult.new(name: "Error", status: :error,

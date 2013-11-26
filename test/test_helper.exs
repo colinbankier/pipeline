@@ -54,12 +54,12 @@ defmodule Pipeline.TestHelper do
   end
 
   def simple_initialized_pipeline_result do
-    PipelineResult.new(name: "Simple Pipeline",
+    PipelineResult.new(id: 1, name: "Simple Pipeline",
     status: :not_started,
     tasks: [
       TaskResult.new(name: "task 1", status: :not_started,
       output: ""),
-      PipelineResult.new(name: "task 2",
+      PipelineResult.new(id: 1, name: "task 2",
       status: :not_started,
       tasks: [
         TaskResult.new(name: "task 2a", status: :not_started,
@@ -92,8 +92,8 @@ defmodule Pipeline.TestHelper do
    state
   end
 
-  def poll(state = PipelineResult[]) do
-   IO.puts "Polling...#(state.status}"
+  def poll(state) do
+   IO.puts "Polling...#{state}"
    sleep 1000
    poll_until_complete
   end

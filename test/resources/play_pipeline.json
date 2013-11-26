@@ -1,5 +1,6 @@
 { "name": "Pipeline",
   "tasks": [
+    { "name": "Init message", "command": "echo starting" },
     { "name": "Git Clone", "command": "pwd; if [ -d pipeline ]; then cd pipeline && git fetch && git checkout origin/master; else hub clone colinbankier/pipeline; fi;" },
     { "name": "task 2",
       "tasks": [

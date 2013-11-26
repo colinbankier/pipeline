@@ -19,7 +19,9 @@ defmodule PipelineRunner do
   end
 
   def run(pipeline = Pipeline[]) do
+    pipeline |> initialize |> update
     {_, [pipeline_result | _ ]} = _run(pipeline, {:ok, []})
+    pipeline_result |> update
     pipeline_result
   end
 
@@ -39,7 +41,7 @@ defmodule PipelineRunner do
   end
 
   def current_state() do
-    :ets.lookup(:pipeline_results, 1)
+    :ets.lookup(:pipeline_results, 1) |> Enum.first
   end
 
   def overall_status(current_status, task_status) do
@@ -59,10 +61,24 @@ defmodule PipelineRunner do
     :ok
   end
 
+  def append_task_output(pid, output) do
+    :ets.insert(:task_output, {pid, lookup_task_output(pid) <> output})
+  end
+
+  def lookup_task_output(pid) do
+    get_existing_output = fn
+      [head = {_, output} | tail] -> output
+      _ -> ""
+    end
+
+    get_existing_output.(:ets.lookup(:task_output, pid))
+  end
+
   def run_process(:ok, command) do
     working_dir = PipelineApp.default_working_dir |> String.to_char_list!
-    :exec.run(String.to_char_list!(command), [:stdout, :stderr, :sync, {:cd, working_dir}])
-    |> build_run_result
+    :exec.run(String.to_char_list!(command), [:stdout, :stderr, {:cd, working_dir}])
+    #|> build_run_result
+    [ output: "", status: :started ]
   end
 
   def run_process( _ , _) do

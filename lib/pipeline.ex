@@ -24,6 +24,7 @@ defmodule PipelineApp.Supervisor do
   def init(stack) do
     :ets.new :pipeline_results, [:named_table, :public,
       {:keypos, Result.PipelineResult.__record__(:index, :id) + 1}]
+    :ets.new :task_output, [:named_table, :public]
     tree = [
       worker(Repo, []),
       supervisor(PipelineApp.Dynamo, [])
