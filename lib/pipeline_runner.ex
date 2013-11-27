@@ -44,6 +44,18 @@ defmodule PipelineRunner do
     :ets.lookup(:pipeline_results, 1) |> Enum.first
   end
 
+  def lookup_current_state(pipeline_result = PipelineResult[]) do
+    {status, task_results} = Enum.reduce(pipeline_result.tasks, &lookup_current_state/1)
+    {status, [PipelineResult.new(id: 1, name: pipeline_result.name, status: status, tasks: Enum.reverse(task_results)) ]}
+  end
+
+  def lookup_current_state(task_result = TaskResult[]) do
+    result = lookup_task_output(task_result.pid)
+    task_result = TaskResult.new(name: task_result.name, output: result[:output], status: result[:status])
+    {overall_status(:none, result[:status]), [ task_result ] }
+  end
+
+
   def overall_status(current_status, task_status) do
     switch_status = fn
       :error, :not_started -> :error
@@ -76,9 +88,9 @@ defmodule PipelineRunner do
 
   def run_process(:ok, command) do
     working_dir = PipelineApp.default_working_dir |> String.to_char_list!
-    :exec.run(String.to_char_list!(command), [:stdout, :stderr, {:cd, working_dir}])
+    {_,_, pid} = :exec.run_link(String.to_char_list!(command), [:stdout, :stderr, {:cd, working_dir}])
     #|> build_run_result
-    [ output: "", status: :started ]
+    [ output: "", status: :running, pid: pid ]
   end
 
   def run_process( _ , _) do
