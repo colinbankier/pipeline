@@ -36,6 +36,10 @@ defmodule PipelineRunner do
     {overall_status(pipeline_status, result[:status]), [ task_result | result_list ] }
   end
 
+  def find_next_task task, pipeline do
+    # walk pipeline to find task, return the next one
+  end
+
   def update(state = PipelineResult[]) do
     :ets.insert(:pipeline_results, state)
   end
@@ -73,23 +77,9 @@ defmodule PipelineRunner do
     :ok
   end
 
-  def append_task_output(pid, output) do
-    :ets.insert(:task_output, {pid, lookup_task_output(pid) <> output})
-  end
-
-  def lookup_task_output(pid) do
-    get_existing_output = fn
-      [head = {_, output} | tail] -> output
-      _ -> ""
-    end
-
-    get_existing_output.(:ets.lookup(:task_output, pid))
-  end
-
   def run_process(:ok, command) do
     working_dir = PipelineApp.default_working_dir |> String.to_char_list!
-    {_,_, pid} = :exec.run_link(String.to_char_list!(command), [:stdout, :stderr, {:cd, working_dir}])
-    #|> build_run_result
+    pid = TaskRunner.run command, working_dir
     [ output: "", status: :running, pid: pid ]
   end
 

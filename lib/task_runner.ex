@@ -8,12 +8,12 @@ defmodule TaskRunner do
     end
   end
 
-  def run command do
-    spawn(TaskRunner, :_run, [command])
+  def run command, working_dir do
+    spawn(TaskRunner, :_run, [command, working_dir])
   end
 
-  def _run command do
-    :exec.run(String.to_char_list!(command), [:stdout, :stderr, :monitor])
+  def _run command, working_dir do
+    :exec.run(String.to_char_list!(command), [:stdout, :stderr, :monitor, {:cd, working_dir}])
     listen
   end
 
@@ -36,7 +36,7 @@ defmodule TaskRunner do
 
   def process_message {source, ospid, output} do
     IO.puts output
-    PipelineRunner.append_task_output(self(), output)
+    append_task_output(self(), output)
     listen
   end
 
@@ -45,4 +45,18 @@ defmodule TaskRunner do
     IO.inspect message
     listen
   end
+
+  def append_task_output(pid, output) do
+    :ets.insert(:task_output, {pid, lookup_task_output(pid) <> output})
+  end
+
+  def lookup_task_output(pid) do
+    get_existing_output = fn
+      [head = {_, output} | tail] -> output
+      _ -> ""
+    end
+
+    get_existing_output.(:ets.lookup(:task_output, pid))
+  end
+
 end
