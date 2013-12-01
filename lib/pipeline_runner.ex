@@ -38,6 +38,40 @@ defmodule PipelineRunner do
 
   def find_next_task task, pipeline do
     # walk pipeline to find task, return the next one
+
+    Task.new name: "task 2"
+  end
+
+  def find([ head | [] ], pipeline) do
+    if head == pipeline.name do
+      pipeline
+    else
+     nil
+    end
+  end
+
+  def find([ head | tail ], pipeline = Pipeline[]) do
+    IO.puts "found pipe with list"
+    if head == pipeline.name do
+      [ next | rest ] = tail
+      task = Enum.find(pipeline.tasks, fn(task) -> 
+        IO.puts "#{task.name} #{next}"
+        task.name == next 
+      end)
+      IO.puts "got task"
+      IO.inspect task
+      find(tail, task)
+    else
+      nil
+    end
+  end
+
+  def find(path, task) do
+    IO.puts "Unknown find"
+    IO.inspect path
+    IO.inspect task
+    IO.puts "----"
+    nil
   end
 
   def update(state = PipelineResult[]) do
@@ -54,7 +88,7 @@ defmodule PipelineRunner do
   end
 
   def lookup_current_state(task_result = TaskResult[]) do
-    result = lookup_task_output(task_result.pid)
+    result = TaskRunner.lookup_task_output(task_result.pid)
     task_result = TaskResult.new(name: task_result.name, output: result[:output], status: result[:status])
     {overall_status(:none, result[:status]), [ task_result ] }
   end
