@@ -51,15 +51,11 @@ defmodule PipelineRunner do
   end
 
   def find([ head | tail ], pipeline = Pipeline[]) do
-    IO.puts "found pipe with list"
     if head == pipeline.name do
       [ next | rest ] = tail
       task = Enum.find(pipeline.tasks, fn(task) -> 
-        IO.puts "#{task.name} #{next}"
         task.name == next 
       end)
-      IO.puts "got task"
-      IO.inspect task
       find(tail, task)
     else
       nil
@@ -67,10 +63,6 @@ defmodule PipelineRunner do
   end
 
   def find(path, task) do
-    IO.puts "Unknown find"
-    IO.inspect path
-    IO.inspect task
-    IO.puts "----"
     nil
   end
 
