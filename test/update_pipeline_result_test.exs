@@ -1,6 +1,6 @@
 import Pipeline.TestHelper
 
-defmodule FindTaskTest do
+defmodule UpdatePipelineResultTest do
   use ExUnit.Case
   alias Models.Pipeline
   alias Models.Task

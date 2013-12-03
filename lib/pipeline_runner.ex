@@ -36,14 +36,23 @@ defmodule PipelineRunner do
     {overall_status(pipeline_status, result[:status]), [ task_result | result_list ] }
   end
 
+  def find_next_task [ head ], pipeline do
+    nil
+  end
+
   def find_next_task path, pipeline do
+    IO.inspect path
     [ head | tail ] = path |> Enum.reverse
     parent = find(Enum.reverse(tail), pipeline)
     index = Enum.find_index parent.tasks, fn task ->
       task.name == head
     end
-    find_sub_task(tail, Enum.at(parent.tasks, index + 1))
-    |> Enum.reverse
+    if index + 1 >= Enum.count(parent.tasks) do
+      find_next_task(Enum.reverse(tail), pipeline)
+    else
+      find_sub_task(tail, Enum.at(parent.tasks, index + 1))
+      |> Enum.reverse
+    end
   end
 
   def find_sub_task(path, task = Task[]) do

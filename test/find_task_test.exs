@@ -19,6 +19,18 @@ defmodule FindTaskTest do
     assert next_task == ["Simple Pipeline", "task 2", "task 2b"]
   end
 
+  test "Find next task last nested" do
+    next_task = PipelineRunner.find_next_task(["Simple Pipeline", "task 2", "task 2c"], simple_pipeline)
+
+    assert next_task == ["Simple Pipeline", "task 3"]
+  end
+
+  test "Find next task last" do
+    next_task = PipelineRunner.find_next_task(["Simple Pipeline", "task 3"], simple_pipeline)
+
+    assert next_task == nil
+  end
+
   test "Find top level pipeline" do
     task = PipelineRunner.find(["Simple Pipeline"], simple_pipeline)
     assert task.name == "Simple Pipeline"
