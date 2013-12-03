@@ -36,10 +36,23 @@ defmodule PipelineRunner do
     {overall_status(pipeline_status, result[:status]), [ task_result | result_list ] }
   end
 
-  def find_next_task task, pipeline do
-    # walk pipeline to find task, return the next one
+  def find_next_task path, pipeline do
+    [ head | tail ] = path |> Enum.reverse
+    parent = find(Enum.reverse(tail), pipeline)
+    index = Enum.find_index parent.tasks, fn task ->
+      task.name == head
+    end
+    find_sub_task(tail, Enum.at(parent.tasks, index + 1))
+    |> Enum.reverse
+  end
 
-    Task.new name: "task 2"
+  def find_sub_task(path, task = Task[]) do
+    [task.name | path]
+  end
+
+  def find_sub_task(path, pipeline = Pipeline[]) do
+    task = pipeline.tasks |> Enum.first
+    find_sub_task([pipeline.name | path], task)
   end
 
   def find([ head | [] ], pipeline) do
@@ -50,11 +63,11 @@ defmodule PipelineRunner do
     end
   end
 
-  def find([ head | tail ], pipeline = Pipeline[]) do
+  def find([ head | tail ], pipeline) when is_tuple(pipeline) do
     if head == pipeline.name do
       [ next | rest ] = tail
-      task = Enum.find(pipeline.tasks, fn(task) -> 
-        task.name == next 
+      task = Enum.find(pipeline.tasks, fn(task) ->
+        task.name == next
       end)
       find(tail, task)
     else
@@ -85,6 +98,24 @@ defmodule PipelineRunner do
     {overall_status(:none, result[:status]), [ task_result ] }
   end
 
+  def notify_task_complete pipeline, path, task_result do
+    update_pipeline_result(pipeline, path, task_result) |> update
+  end
+
+  def update_pipeline_result(_, [ head | [] ], task_result) do
+    task_result
+  end
+
+  def update_pipeline_result(pipeline_result, [ head | tail ], task_result) do
+    pipeline_result.tasks(update_task_result(pipeline_result.tasks, tail, task_result))
+  end
+
+  def update_task_result(tasks, path = [ head | tail ], task_result) do
+    index = Enum.find_index tasks, fn task ->
+      task.name == head
+    end
+    List.replace_at(tasks, index, update_pipeline_result(Enum.at(tasks, index), path, task_result))
+  end
 
   def overall_status(current_status, task_status) do
     switch_status = fn

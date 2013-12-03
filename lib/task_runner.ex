@@ -42,7 +42,7 @@ defmodule TaskRunner do
     {path, pipeline, output} = lookup_task_output(pid)
     [ name | parent ] = Enum.reverse path
     task_result = TaskResult.new(name: name, output: output, status: status_sym_from_int(exit_code))
-    PipelineRunner.notify_task_complete path, pipeline, task_result
+    PipelineRunner.notify_task_complete pipeline, path, task_result
   end
 
   def status_sym_from_int 0 do
