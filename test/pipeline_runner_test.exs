@@ -67,7 +67,6 @@ defmodule PipelineTest do
       output: "3\n")
       ]
     )
-    assert PipelineRunner.run(simple_pipeline) == expected_result
     simple_pipeline |> PipelineRunner.run
     assert poll_until_complete == expected_result
   end

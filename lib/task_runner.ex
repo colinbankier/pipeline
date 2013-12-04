@@ -1,4 +1,9 @@
 defmodule TaskRunner do
+  alias Models.Pipeline
+  alias Models.Task
+  alias Result.PipelineResult
+  alias Result.TaskResult
+
   def listen do
     receive do
       msg ->
@@ -9,13 +14,22 @@ defmodule TaskRunner do
   end
 
   def run_task path, pipeline, working_dir do
-    task = PipelineRunner.find path, pipeline
-    pid = spawn(TaskRunner, :_run, [task.command, working_dir])
-    set_task_path(pid, path, pipeline)
+    spawn(TaskRunner, :_run, [path, pipeline, working_dir])
   end
 
   def run command, working_dir do
     spawn(TaskRunner, :_run, [command, working_dir])
+  end
+
+  def _run path, pipeline, working_dir do
+    set_task_path(self(), path, pipeline)
+    task = PipelineRunner.find path, pipeline
+    IO.puts "initial output"
+    IO.inspect self()
+    IO.inspect lookup_task_output(self())
+    :exec.run(String.to_char_list!(task.command), [:stdout, :stderr, :monitor,
+      {:cd, String.to_char_list!(working_dir)}])
+    listen
   end
 
   def _run command, working_dir do
@@ -39,7 +53,12 @@ defmodule TaskRunner do
       :normal -> 0
     end
     {:status, exit_code} = :exec.status(get_exec_status.(status))
-    {path, pipeline, output} = lookup_task_output(pid)
+    {path, pipeline, output} = lookup_task_output(self())
+    IO.puts "Exit path:"
+    IO.inspect pid
+    IO.inspect path
+    IO.inspect pipeline
+    IO.inspect output
     [ name | parent ] = Enum.reverse path
     task_result = TaskResult.new(name: name, output: output, status: status_sym_from_int(exit_code))
     PipelineRunner.notify_task_complete pipeline, path, task_result
@@ -66,7 +85,7 @@ defmodule TaskRunner do
   end
 
   def set_task_path(pid, path, pipeline) do
-    {_, existing_output} = lookup_task_output(pid)
+    {_, _, existing_output} = lookup_task_output(pid)
     :ets.insert(:task_output, {pid, path, pipeline, existing_output})
   end
 

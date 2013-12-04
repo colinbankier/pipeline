@@ -109,6 +109,7 @@ defmodule PipelineRunner do
 
   def notify_task_complete pipeline, path, task_result do
     update_pipeline_result(pipeline, path, task_result) |> update
+    TaskRunner.run_task(find_next_task(path, pipeline), pipeline, PipelineApp.default_working_dir)
   end
 
   def update_pipeline_result(_, [ head | [] ], task_result) do
