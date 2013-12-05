@@ -20,9 +20,34 @@ defmodule PipelineRunner do
 
   def run(pipeline = Pipeline[]) do
     pipeline |> initialize |> update
-    {_, [pipeline_result | _ ]} = _run(pipeline, {:ok, []})
-    pipeline_result |> update
-    pipeline_result
+    trigger [pipeline.name], pipeline
+  end
+
+  def trigger(nil, pipeline) do
+    nil
+  end
+
+  def trigger(path, pipeline) do
+    _trigger(path, find(path, pipeline), pipeline)
+  end
+
+  def _trigger(path, task = Task[], pipeline) do
+    update_current_task_status path, :running
+    TaskRunner.run_task(path, pipeline, PipelineApp.default_working_dir)
+  end
+
+  def _trigger(path, task = Pipeline[], pipeline) do
+    update_current_task_status path, :running
+    first_child = Enum.first(task.tasks)
+    child_path = List.insert_at(path, Enum.count(path), first_child.name)
+    trigger(child_path, pipeline)
+  end
+
+  def update_current_task_status(path, status) do
+    current_result = current_state()
+    task_result = find path, current_result
+    new_result = update_pipeline_result current_result, path, task_result.status(status)
+    new_result |> update
   end
 
   def _run(pipeline = Pipeline[], { pipeline_status, result_list }) do
@@ -41,17 +66,19 @@ defmodule PipelineRunner do
   end
 
   def find_next_task path, pipeline do
-    IO.inspect path
     [ head | tail ] = path |> Enum.reverse
-    parent = find(Enum.reverse(tail), pipeline)
+    parent_path = Enum.reverse(tail)
+    parent = find(parent_path, pipeline)
     index = Enum.find_index parent.tasks, fn task ->
       task.name == head
     end
     if index + 1 >= Enum.count(parent.tasks) do
-      find_next_task(Enum.reverse(tail), pipeline)
+      update_current_task_status parent_path, :ok
+      find_next_task(parent_path, pipeline)
     else
-      find_sub_task(tail, Enum.at(parent.tasks, index + 1))
-      |> Enum.reverse
+      task = Enum.at(parent.tasks, index + 1)
+      reversed_path = [task.name | tail]
+      reversed_path |> Enum.reverse
     end
   end
 
@@ -108,8 +135,11 @@ defmodule PipelineRunner do
   end
 
   def notify_task_complete pipeline, path, task_result do
-    update_pipeline_result(pipeline, path, task_result) |> update
-    TaskRunner.run_task(find_next_task(path, pipeline), pipeline, PipelineApp.default_working_dir)
+    IO.puts "Task complete"
+    IO.inspect path
+    IO.inspect current_state()
+    update_pipeline_result(current_state(), path, task_result) |> update
+    trigger(find_next_task(path, pipeline), pipeline)
   end
 
   def update_pipeline_result(_, [ head | [] ], task_result) do

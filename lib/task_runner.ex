@@ -13,6 +13,10 @@ defmodule TaskRunner do
     end
   end
 
+  def run_task nil, _, _ do
+    nil
+  end
+
   def run_task path, pipeline, working_dir do
     spawn(TaskRunner, :_run, [path, pipeline, working_dir])
   end
@@ -24,9 +28,6 @@ defmodule TaskRunner do
   def _run path, pipeline, working_dir do
     set_task_path(self(), path, pipeline)
     task = PipelineRunner.find path, pipeline
-    IO.puts "initial output"
-    IO.inspect self()
-    IO.inspect lookup_task_output(self())
     :exec.run(String.to_char_list!(task.command), [:stdout, :stderr, :monitor,
       {:cd, String.to_char_list!(working_dir)}])
     listen
@@ -54,11 +55,6 @@ defmodule TaskRunner do
     end
     {:status, exit_code} = :exec.status(get_exec_status.(status))
     {path, pipeline, output} = lookup_task_output(self())
-    IO.puts "Exit path:"
-    IO.inspect pid
-    IO.inspect path
-    IO.inspect pipeline
-    IO.inspect output
     [ name | parent ] = Enum.reverse path
     task_result = TaskResult.new(name: name, output: output, status: status_sym_from_int(exit_code))
     PipelineRunner.notify_task_complete pipeline, path, task_result

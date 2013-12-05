@@ -93,7 +93,7 @@ defmodule Pipeline.TestHelper do
   end
 
   def poll(state) do
-   IO.puts "Polling...#{state}"
+   IO.puts "Polling..."
    sleep 1000
    poll_until_complete
   end
