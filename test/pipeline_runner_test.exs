@@ -8,7 +8,7 @@ defmodule PipelineTest do
   alias Result.PipelineResult
  
   test "initializes pipeline result" do
-    result = PipelineRunner.start(simple_pipeline)
+    result = PipelineRunner.initialize(simple_pipeline)
 
     assert result == simple_initialized_pipeline_result
   end
@@ -25,7 +25,7 @@ defmodule PipelineTest do
       TaskResult.new(name: "Task 2", output: "", status: :not_started),
       TaskResult.new(name: "Task 3", output: "", status: :not_started)
       ]
-    assert PipelineRunner.start(pipe) == expected_result
+    assert PipelineRunner.initialize(pipe) == expected_result
   end
 
   test "runs sequence of tasks" do
@@ -43,7 +43,7 @@ defmodule PipelineTest do
       TaskResult.new(name: "Task 3", output: "3\n", status: :ok)
     ]
     pipe |> PipelineRunner.run
-    assert poll_until_complete == expected_result
+    assert poll_until_complete(pipe) == expected_result
   end
 
   test "runs nested tasks" do
@@ -68,7 +68,7 @@ defmodule PipelineTest do
       ]
     )
     simple_pipeline |> PipelineRunner.run
-    assert poll_until_complete == expected_result
+    assert poll_until_complete(simple_pipeline) == expected_result
   end
 
   test "runs mulitline command" do
@@ -87,7 +87,7 @@ defmodule PipelineTest do
       ]
     )
     pipe |> PipelineRunner.run
-    assert poll_until_complete == expected_result
+    assert poll_until_complete(pipe) == expected_result
   end
 
   test "result has ok status if exit status 0" do
@@ -103,7 +103,7 @@ defmodule PipelineTest do
     )
 
     pipe |> PipelineRunner.run
-    assert poll_until_complete == expected_result
+    assert poll_until_complete(pipe) == expected_result
   end
 
   test "result has error status if exit status 1" do
@@ -119,7 +119,7 @@ defmodule PipelineTest do
     )
 
     pipe |> PipelineRunner.run
-    assert poll_until_complete == expected_result
+    assert poll_until_complete(pipe) == expected_result
   end
 
   test "should capture stderr" do
@@ -136,7 +136,7 @@ defmodule PipelineTest do
     )
 
     pipe |> PipelineRunner.run
-    assert poll_until_complete == expected_result
+    assert poll_until_complete(pipe) == expected_result
   end
 
   test "working directory defaults to .pipeline" do
@@ -145,7 +145,7 @@ defmodule PipelineTest do
       ]
 
     pipe |> PipelineRunner.run
-    pipeline_result = poll_until_complete
+    pipeline_result = poll_until_complete(pipe)
 
     output = Enum.first(pipeline_result.tasks).output
     assert output == Path.join(System.get_env("HOME"), ".pipeline") <> "\n"
@@ -168,6 +168,6 @@ defmodule PipelineTest do
     )
 
     pipe |> PipelineRunner.run
-    assert poll_until_complete == expected_result
+    assert poll_until_complete(pipe) == expected_result
   end
 end

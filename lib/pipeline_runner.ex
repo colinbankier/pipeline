@@ -1,13 +1,8 @@
 defmodule PipelineRunner do
-
   alias Models.Pipeline
   alias Models.Task
   alias Result.PipelineResult
   alias Result.TaskResult
-
-  def start(pipe) do
-    initialize(pipe)
-  end
 
   def initialize(pipeline = Pipeline[]) do
     tasks = Enum.map(pipeline.tasks, &initialize/1)
@@ -19,7 +14,7 @@ defmodule PipelineRunner do
   end
 
   def run(pipeline = Pipeline[]) do
-    pipeline |> initialize |> update
+    #pipeline |> initialize |> update
     trigger [pipeline.name], pipeline
   end
 
@@ -32,20 +27,24 @@ defmodule PipelineRunner do
   end
 
   def _trigger(path, task = Task[], pipeline) do
-    update_current_task_status path, :running
+    update_current_task_status path, :running, pipeline
     TaskRunner.run_task(path, pipeline, PipelineApp.default_working_dir)
   end
 
   def _trigger(path, task = Pipeline[], pipeline) do
-    update_current_task_status path, :running
+    update_current_task_status path, :running, pipeline
     first_child = Enum.first(task.tasks)
     child_path = List.insert_at(path, Enum.count(path), first_child.name)
     trigger(child_path, pipeline)
   end
 
-  def update_current_task_status(path, status) do
-    current_result = current_state()
+  def update_current_task_status(path, status, pipeline) do
+    current_result = current_state(pipeline)
+    IO.inspect current_result
+    IO.inspect pipeline
+    IO.inspect path
     task_result = find path, current_result
+    IO.inspect task_result
     new_result = update_pipeline_result current_result, path, task_result.status(status)
     new_result |> update
   end
@@ -118,8 +117,12 @@ defmodule PipelineRunner do
     :ets.insert(:pipeline_results, state)
   end
 
-  def current_state() do
-    :ets.lookup(:pipeline_results, 1) |> Enum.first
+  def current_state(pipeline) do
+    find_or_init = fn
+      nil -> initialize(pipeline)
+      result -> result
+    end
+    find_or_init.(:ets.lookup(:pipeline_results, 1) |> Enum.first)
   end
 
   def lookup_current_state(pipeline_result = PipelineResult[]) do
@@ -134,7 +137,7 @@ defmodule PipelineRunner do
   end
 
   def notify_task_complete pipeline, path, task_result do
-    update_pipeline_result(current_state(), path, task_result) |> update
+    update_pipeline_result(current_state(pipeline), path, task_result) |> update
     if task_result.status == :ok do
       trigger(find_next_task(path, pipeline), pipeline)
     end

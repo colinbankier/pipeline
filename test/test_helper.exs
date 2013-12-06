@@ -80,21 +80,21 @@ defmodule Pipeline.TestHelper do
     Task.new name: "Task " <> number, command: "echo " <> number
   end
 
-  def poll_until_complete() do
-    PipelineRunner.current_state |> poll
+  def poll_until_complete(pipeline) do
+    PipelineRunner.current_state(pipeline) |> poll(pipeline)
   end
 
-  def poll(state = PipelineResult[status: :ok]) do
+  def poll(state = PipelineResult[status: :ok], pipeline) do
    state
   end
 
-  def poll(state = PipelineResult[status: :error]) do
+  def poll(state = PipelineResult[status: :error], pipeline) do
    state
   end
 
-  def poll(state) do
+  def poll(state, pipeline) do
    IO.puts "Polling..."
    sleep 1000
-   poll_until_complete
+   poll_until_complete pipeline
   end
 end
