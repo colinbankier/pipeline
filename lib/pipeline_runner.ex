@@ -73,7 +73,6 @@ defmodule PipelineRunner do
       task.name == head
     end
     if index + 1 >= Enum.count(parent.tasks) do
-      update_current_task_status parent_path, :ok
       find_next_task(parent_path, pipeline)
     else
       task = Enum.at(parent.tasks, index + 1)
@@ -135,11 +134,10 @@ defmodule PipelineRunner do
   end
 
   def notify_task_complete pipeline, path, task_result do
-    IO.puts "Task complete"
-    IO.inspect path
-    IO.inspect current_state()
     update_pipeline_result(current_state(), path, task_result) |> update
-    trigger(find_next_task(path, pipeline), pipeline)
+    if task_result.status == :ok do
+      trigger(find_next_task(path, pipeline), pipeline)
+    end
   end
 
   def update_pipeline_result(_, [ head | [] ], task_result) do
@@ -147,7 +145,8 @@ defmodule PipelineRunner do
   end
 
   def update_pipeline_result(pipeline_result, [ head | tail ], task_result) do
-    pipeline_result.tasks(update_task_result(pipeline_result.tasks, tail, task_result))
+    updated_tasks = update_task_result(pipeline_result.tasks, tail, task_result)
+    pipeline_result.tasks(updated_tasks).status(task_result.status)
   end
 
   def update_task_result(tasks, path = [ head | tail ], task_result) do
