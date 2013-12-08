@@ -48,7 +48,6 @@ defmodule TaskRunner do
   end
 
   def handle_exit pid, status do
-    IO.puts "process exited."
     get_exec_status = fn
       {:exit_status, exec_status} -> exec_status
       :normal -> 0

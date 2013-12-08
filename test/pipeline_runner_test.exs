@@ -6,6 +6,11 @@ defmodule PipelineTest do
   alias Models.Task
   alias Result.TaskResult
   alias Result.PipelineResult
+
+  setup do
+    :ets.delete_all_objects :pipeline_results
+    :ok
+  end
  
   test "initializes pipeline result" do
     result = PipelineRunner.initialize(simple_pipeline)

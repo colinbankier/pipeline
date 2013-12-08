@@ -40,11 +40,7 @@ defmodule PipelineRunner do
 
   def update_current_task_status(path, status, pipeline) do
     current_result = current_state(pipeline)
-    IO.inspect current_result
-    IO.inspect pipeline
-    IO.inspect path
     task_result = find path, current_result
-    IO.inspect task_result
     new_result = update_pipeline_result current_result, path, task_result.status(status)
     new_result |> update
   end
@@ -114,15 +110,17 @@ defmodule PipelineRunner do
   end
 
   def update(state = PipelineResult[]) do
-    :ets.insert(:pipeline_results, state)
+    :ets.insert(:pipeline_results, { state.name, state})
   end
 
   def current_state(pipeline) do
     find_or_init = fn
       nil -> initialize(pipeline)
-      result -> result
+      {_, result} -> result
+      result ->
+        nil
     end
-    find_or_init.(:ets.lookup(:pipeline_results, 1) |> Enum.first)
+    find_or_init.(:ets.lookup(:pipeline_results, pipeline.name) |> Enum.first)
   end
 
   def lookup_current_state(pipeline_result = PipelineResult[]) do
