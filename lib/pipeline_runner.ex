@@ -14,7 +14,6 @@ defmodule PipelineRunner do
   end
 
   def run(pipeline = Pipeline[]) do
-    #pipeline |> initialize |> update
     trigger [pipeline.name], pipeline
   end
 

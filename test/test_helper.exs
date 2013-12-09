@@ -1,7 +1,6 @@
 Dynamo.under_test(PipelineApp.Dynamo)
 Dynamo.Loader.enable
 ExUnit.start
-import :timer, only: [ sleep: 1 ]
 
 defmodule Pipeline.TestCase do
   use ExUnit.CaseTemplate
@@ -75,26 +74,8 @@ defmodule Pipeline.TestHelper do
       ]
     )
   end
-  
+
   def create_task(number) do
     Task.new name: "Task " <> number, command: "echo " <> number
-  end
-
-  def poll_until_complete(pipeline) do
-    PipelineRunner.current_state(pipeline) |> poll(pipeline)
-  end
-
-  def poll(state = PipelineResult[status: :ok], pipeline) do
-   state
-  end
-
-  def poll(state = PipelineResult[status: :error], pipeline) do
-   state
-  end
-
-  def poll(state, pipeline) do
-   IO.puts "Polling..."
-   sleep 1000
-   poll_until_complete pipeline
   end
 end

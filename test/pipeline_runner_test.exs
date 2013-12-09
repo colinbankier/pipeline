@@ -1,4 +1,5 @@
 import Pipeline.TestHelper
+import Poll
 
 defmodule PipelineTest do
   use ExUnit.Case

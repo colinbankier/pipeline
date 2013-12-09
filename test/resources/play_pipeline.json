@@ -6,9 +6,9 @@
       "tasks": [
         { "name": "task 2a", "command": "cd pipeline; mix deps.get && mix compile" },
         { "name": "task 2b", "command": "cd pipeline; mix test" },
-        { "name": "task 2c", "command": "echo 2c" }
+        { "name": "task 2c", "command": "echo task2c" }
       ]
     },
-    { "name": "task 3", "command": "" }
+    { "name": "task 3", "command": "echo task3" }
   ]
 }

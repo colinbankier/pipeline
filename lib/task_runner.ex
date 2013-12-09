@@ -8,8 +8,6 @@ defmodule TaskRunner do
     receive do
       msg ->
         process_message msg
-    after 9000 ->
-      IO.puts "Nothing happened as far as I am concerned"
     end
   end
 
