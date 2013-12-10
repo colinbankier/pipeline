@@ -34,6 +34,15 @@ defmodule PipelineTest do
     assert PipelineRunner.initialize(pipe) == expected_result
   end
 
+  test "run returns sequential build number" do
+    pipe = Pipeline.new name: "Sequence", tasks: [
+      create_task("1"),
+    ]
+
+    assert PipelineRunner.run(pipe) == 1
+    assert PipelineRunner.run(pipe) == 2
+  end
+
   test "runs sequence of tasks" do
     pipe = Pipeline.new name: "Sequence", tasks: [
       create_task("1"),
