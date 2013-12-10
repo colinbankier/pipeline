@@ -5,6 +5,7 @@ defmodule BuildNumberTest do
 
   setup do
     BuildNumber.clear_all
+    :ok
   end
 
   test "get sequential build number for pipeline" do

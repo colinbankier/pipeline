@@ -50,6 +50,6 @@ defmodule BuildNumber do
   end
 
   def clear_all do
-    File.rm! @db_path
+    File.rm @db_path
   end
 end

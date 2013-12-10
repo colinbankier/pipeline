@@ -15,16 +15,16 @@ defmodule TaskRunner do
     nil
   end
 
-  def run_task path, pipeline, working_dir do
-    spawn(TaskRunner, :_run, [path, pipeline, working_dir])
+  def run_task path, pipeline, build_number, working_dir do
+    spawn(TaskRunner, :_run, [path, pipeline, build_number, working_dir])
   end
 
   def run command, working_dir do
     spawn(TaskRunner, :_run, [command, working_dir])
   end
 
-  def _run path, pipeline, working_dir do
-    set_task_path(self(), path, pipeline)
+  def _run path, pipeline, build_number, working_dir do
+    set_task_path(self(), path, pipeline, build_number)
     task = PipelineRunner.find path, pipeline
     :exec.run(String.to_char_list!(task.command), [:stdout, :stderr, :monitor,
       {:cd, String.to_char_list!(working_dir)}])
@@ -51,10 +51,10 @@ defmodule TaskRunner do
       :normal -> 0
     end
     {:status, exit_code} = :exec.status(get_exec_status.(status))
-    {path, pipeline, output} = lookup_task_output(self())
+    {path, pipeline, build_number, output} = lookup_task_output(self())
     [ name | parent ] = Enum.reverse path
     task_result = TaskResult.new(name: name, output: output, status: status_sym_from_int(exit_code))
-    PipelineRunner.notify_task_complete pipeline, path, task_result
+    PipelineRunner.notify_task_complete pipeline, path, build_number, task_result
   end
 
   def status_sym_from_int 0 do
@@ -77,20 +77,20 @@ defmodule TaskRunner do
     listen
   end
 
-  def set_task_path(pid, path, pipeline) do
-    {_, _, existing_output} = lookup_task_output(pid)
-    :ets.insert(:task_output, {pid, path, pipeline, existing_output})
+  def set_task_path(pid, path, pipeline, build_number) do
+    {_, _, _, existing_output} = lookup_task_output(pid)
+    :ets.insert(:task_output, {pid, path, pipeline, build_number, existing_output})
   end
 
   def append_task_output(pid, output) do
-    {path, pipeline, existing_output} = lookup_task_output(pid)
-    :ets.insert(:task_output, {pid, path, pipeline, existing_output <> output})
+    {path, pipeline, build_number, existing_output} = lookup_task_output(pid)
+    :ets.insert(:task_output, {pid, path, pipeline, build_number, existing_output <> output})
   end
 
   def lookup_task_output(pid) do
     get_existing_output = fn
-      [head = {_, path, pipeline, output} | tail] -> {path, pipeline, output}
-      _ -> {[], nil, ""}
+      [head = {_, path, pipeline, build_number, output} | tail] -> {path, pipeline, build_number, output}
+      _ -> {[], nil, nil, ""}
     end
 
     get_existing_output.(:ets.lookup(:task_output, pid))

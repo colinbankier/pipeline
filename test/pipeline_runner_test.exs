@@ -10,6 +10,7 @@ defmodule PipelineTest do
 
   setup do
     :ets.delete_all_objects :pipeline_results
+    BuildNumber.clear_all
     :ok
   end
  
@@ -39,8 +40,9 @@ defmodule PipelineTest do
       create_task("1"),
     ]
 
-    assert PipelineRunner.run(pipe) == 1
-    assert PipelineRunner.run(pipe) == 2
+    assert PipelineRunner.run(pipe) == {:ok, 1}
+    poll_until_complete pipe, 1
+    assert PipelineRunner.run(pipe) == {:ok, 2}
   end
 
   test "runs sequence of tasks" do
@@ -57,8 +59,8 @@ defmodule PipelineTest do
       TaskResult.new(name: "Task 2", output: "2\n", status: :ok),
       TaskResult.new(name: "Task 3", output: "3\n", status: :ok)
     ]
-    pipe |> PipelineRunner.run
-    assert poll_until_complete(pipe) == expected_result
+    {:ok, build_number} = pipe |> PipelineRunner.run
+    assert poll_until_complete(pipe, build_number) == expected_result
   end
 
   test "runs nested tasks" do
@@ -82,8 +84,8 @@ defmodule PipelineTest do
       output: "3\n")
       ]
     )
-    simple_pipeline |> PipelineRunner.run
-    assert poll_until_complete(simple_pipeline) == expected_result
+    {:ok, build_number} = simple_pipeline |> PipelineRunner.run
+    assert poll_until_complete(simple_pipeline, build_number) == expected_result
   end
 
   test "runs mulitline command" do
@@ -101,8 +103,8 @@ defmodule PipelineTest do
       output: "1\n2\n"),
       ]
     )
-    pipe |> PipelineRunner.run
-    assert poll_until_complete(pipe) == expected_result
+    {:ok, build_number} = pipe |> PipelineRunner.run
+    assert poll_until_complete(pipe, build_number) == expected_result
   end
 
   test "result has ok status if exit status 0" do
@@ -117,8 +119,8 @@ defmodule PipelineTest do
       ]
     )
 
-    pipe |> PipelineRunner.run
-    assert poll_until_complete(pipe) == expected_result
+    {:ok, build_number} = pipe |> PipelineRunner.run
+    assert poll_until_complete(pipe, build_number) == expected_result
   end
 
   test "result has error status if exit status 1" do
@@ -133,8 +135,8 @@ defmodule PipelineTest do
       ]
     )
 
-    pipe |> PipelineRunner.run
-    assert poll_until_complete(pipe) == expected_result
+    {:ok, build_number} = pipe |> PipelineRunner.run
+    assert poll_until_complete(pipe, build_number) == expected_result
   end
 
   test "should capture stderr" do
@@ -150,8 +152,8 @@ defmodule PipelineTest do
       ]
     )
 
-    pipe |> PipelineRunner.run
-    assert poll_until_complete(pipe) == expected_result
+    {:ok, build_number} = pipe |> PipelineRunner.run
+    assert poll_until_complete(pipe, build_number) == expected_result
   end
 
   test "working directory defaults to .pipeline" do
@@ -159,8 +161,8 @@ defmodule PipelineTest do
       Task.new(name: "Working Dir", command: "pwd" )
       ]
 
-    pipe |> PipelineRunner.run
-    pipeline_result = poll_until_complete(pipe)
+    {:ok, build_number} = pipe |> PipelineRunner.run
+    pipeline_result = poll_until_complete(pipe, build_number)
 
     output = Enum.first(pipeline_result.tasks).output
     assert output == Path.join(System.get_env("HOME"), ".pipeline") <> "\n"
@@ -182,7 +184,7 @@ defmodule PipelineTest do
       ]
     )
 
-    pipe |> PipelineRunner.run
-    assert poll_until_complete(pipe) == expected_result
+    {:ok, build_number} = pipe |> PipelineRunner.run
+    assert poll_until_complete(pipe, build_number) == expected_result
   end
 end

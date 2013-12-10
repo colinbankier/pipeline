@@ -22,26 +22,28 @@ defmodule PipelineRunner do
   end
 
   def trigger(path, pipeline) do
-    _trigger(path, find(path, pipeline), pipeline)
+    build_number = BuildNumber.next! [pipeline.name]
+    _trigger(path, find(path, pipeline), pipeline, build_number)
+    {:ok, build_number}
   end
 
-  def _trigger(path, task = Task[], pipeline) do
-    update_current_task_status path, :running, pipeline
-    TaskRunner.run_task(path, pipeline, PipelineApp.default_working_dir)
+  def _trigger(path, task = Task[], pipeline, build_number) do
+    update_current_task_status path, :running, pipeline, build_number
+    TaskRunner.run_task(path, pipeline, build_number, PipelineApp.default_working_dir)
   end
 
-  def _trigger(path, task = Pipeline[], pipeline) do
-    update_current_task_status path, :running, pipeline
+  def _trigger(path, task = Pipeline[], pipeline, build_number) do
+    update_current_task_status path, :running, pipeline, build_number
     first_child = Enum.first(task.tasks)
     child_path = List.insert_at(path, Enum.count(path), first_child.name)
-    trigger(child_path, pipeline)
+    _trigger(child_path, find(child_path, pipeline), pipeline, build_number)
   end
 
-  def update_current_task_status(path, status, pipeline) do
-    current_result = current_state(pipeline)
+  def update_current_task_status(path, status, pipeline, build_number) do
+    current_result = current_state(pipeline, build_number)
     task_result = find path, current_result
     new_result = update_pipeline_result current_result, path, task_result.status(status)
-    new_result |> update
+    new_result |> update(build_number)
   end
 
   def find_next_task [ head ], pipeline do
@@ -97,24 +99,25 @@ defmodule PipelineRunner do
     nil
   end
 
-  def update(state = PipelineResult[]) do
-    :ets.insert(:pipeline_results, { state.name, state})
+  def update(state = PipelineResult[], build_number) do
+    :ets.insert(:pipeline_results, { {state.name, build_number}, state})
   end
 
-  def current_state(pipeline) do
+  def current_state(pipeline, build_number) do
     find_or_init = fn
       nil -> initialize(pipeline)
       {_, result} -> result
       result ->
         nil
     end
-    find_or_init.(:ets.lookup(:pipeline_results, pipeline.name) |> Enum.first)
+    find_or_init.(:ets.lookup(:pipeline_results, {pipeline.name, build_number}) |> Enum.first)
   end
 
-  def notify_task_complete pipeline, path, task_result do
-    update_pipeline_result(current_state(pipeline), path, task_result) |> update
+  def notify_task_complete pipeline, path, build_number, task_result do
+    update_pipeline_result(current_state(pipeline, build_number), path, task_result) |> update(build_number)
     if task_result.status == :ok do
-      trigger(find_next_task(path, pipeline), pipeline)
+      path = find_next_task(path, pipeline)
+      _trigger(path, find(path, pipeline), pipeline, build_number)
     end
   end
 
