@@ -45,6 +45,19 @@ defmodule PipelineTest do
     assert PipelineRunner.run(pipe) == {:ok, 2}
   end
 
+  test "returns history of pipeline runs" do
+    pipe = Pipeline.new name: "History", tasks: [
+      create_task("1"),
+    ]
+
+    PipelineRunner.run(pipe) == {:ok, 1}
+    result1 = poll_until_complete pipe, 1
+    PipelineRunner.run(pipe) == {:ok, 2}
+    result2 = poll_until_complete pipe, 2
+
+    assert PipelineHistory.get(pipe) == [ {1, result1}, {2, result2} ]
+  end
+
   test "runs sequence of tasks" do
     pipe = Pipeline.new name: "Sequence", tasks: [
       create_task("1"),

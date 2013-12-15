@@ -2,10 +2,13 @@
   "dynamo": {:git, "git://github.com/elixir-lang/dynamo.git", "162444c02fcf7d8aa1c65dcd36d02fd2e2450a24", []},
   "ecto": {:git, "git://github.com/elixir-lang/ecto.git", "1d6f70467b80e6fecf2ab4178902394252086a70", []},
   "exec": {:git, "git://github.com/saleyn/erlexec.git", "a84d95f46422163c24ffef7a123efe9b15d56253", [{:ref, "a84d95f46422163c24ffef7a123efe9b15d56253"}]},
+  "gpb": {:git, "git://github.com/tomas-abrahamsson/gpb.git", "0c931c9ea99fd2de5003a7e631f27e1017633c8a", []},
   "hackney": {:git, "git://github.com/benoitc/hackney.git", "5b0f7eb949ebebd6fabfbc4e08a7b7231850606a", []},
   "jsex": {:git, "git://github.com/talentdeficit/jsex.git", "c9df36f07b2089a73ab6b32074c01728f1e5a2e1", []},
   "jsx": {:git, "git://github.com/talentdeficit/jsx.git", "e50af6e109cb03bd26acf715cbc77de746507d1d", [{:tag, "v1.4.3"}]},
   "mimetypes": {:git, "git://github.com/spawngrid/mimetypes.git", "47d37a977a7d633199822bf6b08353007483d00f", []},
   "poolboy": {:git, "git://github.com/devinus/poolboy.git", "c2c939b51aba06790ca51fa78b14c254a6ea977d", []},
   "postgrex": {:git, "git://github.com/ericmj/postgrex.git", "c4cc2dd050cab1af2597b5192bc629d4ab91ba98", []},
-  "ranch": {:git, "git://github.com/extend/ranch.git", "41705752ffc7e3ecb96eef8374015ead4ca7f699", [{:ref, "0.8.5"}]} ]
+  "protobuf": {:git, "git://github.com/azukiapp/elixir-protobuf.git", "88171f9cacfb5e5e94b48151784bf68b9d2023f9", [{:tag, "v0.0.3"}]},
+  "ranch": {:git, "git://github.com/extend/ranch.git", "41705752ffc7e3ecb96eef8374015ead4ca7f699", [{:ref, "0.8.5"}]},
+  "rethinkdb": {:git, "git://github.com/azukiapp/elixir-rethinkdb.git", "56e305d628b847245c1eadb268f8fcbc0f03bcab", []} ]

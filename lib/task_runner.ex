@@ -19,20 +19,10 @@ defmodule TaskRunner do
     spawn(TaskRunner, :_run, [path, pipeline, build_number, working_dir])
   end
 
-  def run command, working_dir do
-    spawn(TaskRunner, :_run, [command, working_dir])
-  end
-
   def _run path, pipeline, build_number, working_dir do
     set_task_path(self(), path, pipeline, build_number)
     task = PipelineRunner.find path, pipeline
     :exec.run(String.to_char_list!(task.command), [:stdout, :stderr, :monitor,
-      {:cd, String.to_char_list!(working_dir)}])
-    listen
-  end
-
-  def _run command, working_dir do
-    :exec.run(String.to_char_list!(command), [:stdout, :stderr, :monitor,
       {:cd, String.to_char_list!(working_dir)}])
     listen
   end
