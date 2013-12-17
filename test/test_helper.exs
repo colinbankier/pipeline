@@ -53,23 +53,37 @@ defmodule Pipeline.TestHelper do
   end
 
   def simple_initialized_pipeline_result do
-    PipelineResult.new(id: 1, name: "Simple Pipeline",
+    PipelineResult.new(id: 1, path: ["Simple Pipeline"],
     status: :not_started,
+    pipeline_build_number: 1,
+    build_number: 1,
     tasks: [
-      TaskResult.new(name: "task 1", status: :not_started,
+      TaskResult.new(path: ["Simple Pipeline", "task 1"], status: :not_started,
+      pipeline_build_number: 1,
+      build_number: 1,
       output: ""),
-      PipelineResult.new(id: 1, name: "task 2",
+      PipelineResult.new(id: 1, path: ["Simple Pipeline", "task 2"],
+      pipeline_build_number: 1,
+      build_number: 1,
       status: :not_started,
       tasks: [
-        TaskResult.new(name: "task 2a", status: :not_started,
+        TaskResult.new(path: ["Simple Pipeline", "task 2", "task 2a"], status: :not_started,
+        pipeline_build_number: 1,
+        build_number: 1,
         output: ""),
-        TaskResult.new(name: "task 2b", status: :not_started,
+        TaskResult.new(path: ["Simple Pipeline", "task 2", "task 2b"], status: :not_started,
+        pipeline_build_number: 1,
+        build_number: 1,
         output: ""),
-        TaskResult.new(name: "task 2c", status: :not_started,
+        TaskResult.new(path: ["Simple Pipeline", "task 2", "task 2c"], status: :not_started,
+        pipeline_build_number: 1,
+        build_number: 1,
         output: ""),
         ]
       ),
-      TaskResult.new(name: "task 3", status: :not_started,
+      TaskResult.new(path: ["Simple Pipeline", "task 3"], status: :not_started,
+      pipeline_build_number: 1,
+      build_number: 1,
       output: "")
       ]
     )

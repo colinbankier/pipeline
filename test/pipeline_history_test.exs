@@ -24,16 +24,19 @@ defmodule PipelineHistoryTest do
       pipeline_build_number: pipeline_build_number,
       build_number: build_number
 
-    store(result)
+    result = store(result)
 
+    assert result.path == path
+    assert result.pipeline_build_number == pipeline_build_number
+    assert result.build_number == build_number
     assert get(path, pipeline_build_number, build_number) == result
   end
 
   test "stores a pipeline result" do
-    result = PipelineResult.new
-    store(result)
+    result = simple_initialized_pipeline_result
+    result = store(result)
 
-    assert get("My Result", 1, 1) == result
+    assert get(["Simple Pipeline"], 1, 1) == result
   end
 
   test "returns history of pipeline runs" do
