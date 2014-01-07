@@ -1,7 +1,44 @@
 App = Ember.Application.create();
 
+var pipeline = {
+    name: 'Root Pipeline',
+    tasks: [
+        {
+            name: 'Task 1',
+            tasks: [
+                {
+                    name: 'Task 2',
+                    tasks: [
+                        {
+                            name: 'Run'
+                        },
+                        {
+                            name: 'Shell'
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
 App.Router.map(function() {
-  // put your routes here
+  this.resource('design', function() {
+    this.resource('task', { path: ':task_path' });
+  });
+});
+
+App.DesignRoute = Ember.Route.extend({
+  model: function() {
+    return pipeline;
+  }
+});
+
+App.TaskRoute = Ember.Route.extend({
+  model: function(params) {
+    // params.post_path
+    return pipeline;
+  }
 });
 
 App.TreeBranchController = Ember.ObjectController.extend({
@@ -31,24 +68,4 @@ App.TreeNodeView = Ember.View.extend({
         classNames: ['tree-node']
 });
 
-App.set('pipeline', {
-    name: 'Root Pipeline',
-    tasks: [
-        {
-            name: 'Task 1',
-            tasks: [
-                {
-                    name: 'Task 2',
-                    tasks: [
-                        {
-                            name: 'Run'
-                        },
-                        {
-                            name: 'Shell'
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-});
+App.set('pipeline', pipeline);

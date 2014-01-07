@@ -5,6 +5,7 @@
 <title>Pipeline</title>
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
+<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
   <script type="text/javascript">
     window.ENV = window.ENV || {};
     ENV.EXPERIMENTAL_CONTROL_HELPER = true
@@ -12,8 +13,14 @@
 </head>
 <body>
   <script type="text/x-handlebars">
-    <h2>Pipeline</h2>
-
+    <div class="navbar">
+      <div class="navbar-inner">
+        <a class="brand" href="#">Pipeline</a>
+        <ul class="nav">
+          <li>{{#link-to 'design'}}Design{{/link-to}}</li>
+        </ul>
+      </div>
+    </div>
     {{outlet}}
   </script>
 
@@ -36,8 +43,24 @@
   </script>
 
   <script type="text/x-handlebars" id="index">
-    <h1>Ember.js Tree Example</h1>
-    {{control "treeBranch" App.pipeline}}
+    <p>Welcome to Pipeline. Continuous Delivery is on its way.</p>
+  </script>
+
+  <script type="text/x-handlebars" id="design">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          {{control "treeBranch" App.pipeline}}
+        </div>
+        <div class="span9">
+          I am a task.
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="task">
+    <p>{{input type="text" value=name}}</p>
   </script>
 
   <script src="js/libs/jquery-1.10.2.js"></script>
