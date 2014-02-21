@@ -3,22 +3,19 @@ App = Ember.Application.create();
 var pipeline = {
     name: 'Root Pipeline',
     tasks: [
+      {
+      name: 'Task 1',
+      tasks: [
         {
-            name: 'Task 1',
-            tasks: [
-                {
-                    name: 'Task 2',
-                    tasks: [
-                        {
-                            name: 'Run'
-                        },
-                        {
-                            name: 'Shell'
-                        }
-                    ]
-                }
-            ]
+        name: 'Task 2',
+        tasks: [
+          {
+          name: 'Run'
+        },
+        {
+          name: 'Shell'
         }
+        ] } ] }
     ]
 }
 
@@ -37,6 +34,17 @@ App.DesignRoute = Ember.Route.extend({
 App.TaskRoute = Ember.Route.extend({
   model: function(params) {
     // params.post_path
+    var path = String.split('|', params.post_path);
+    return this.findTask(pipeline, path);
+  },
+  findTask: function(pipeline, path) {
+    if (path.length == 1 &&
+        path.firstObject == pipeline.name) {
+        return pipeline;
+    } else if (path.firstObject == pipeline.name) {
+      var task = pipeline.tasks.findBy('name', path[1]);
+    }
+
     return pipeline;
   }
 });
@@ -52,13 +60,13 @@ App.TreeBranchView = Ember.View.extend({
 });
 
 App.TreeNodeController = Ember.ObjectController.extend({
-      isExpanded: false,
-          toggle: function() {
-                    this.set('isExpanded', !this.get('isExpanded'));
-                        },
-                            click: function() {
-                                      console.log('Clicked: '+this.get('text'));
-                                          }
+  isExpanded: false,
+  toggle: function() {
+    this.set('isExpanded', !this.get('isExpanded'));
+  },
+  click: function() {
+    console.log('Clicked: '+this.get('text'));
+  }
 });
 App.register('controller:treeNode', App.TreeNodeController, {singleton: false});
 

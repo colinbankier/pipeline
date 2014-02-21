@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<title>Pipeline</title>
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/style.css">
-<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-  <script type="text/javascript">
-    window.ENV = window.ENV || {};
-    ENV.EXPERIMENTAL_CONTROL_HELPER = true
-  </script>
+  <head>
+    <meta charset="utf-8">
+    <title>Pipeline</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <script type="text/javascript">
+      window.ENV = window.ENV || {};
+ENV.EXPERIMENTAL_CONTROL_HELPER = true
+</script>
 </head>
 <body>
   <script type="text/x-handlebars">
@@ -36,7 +36,7 @@
       &#x25B6;
       {{/if}}
     </span>
-    <a {{action click}} class="text">{{name}}</a>
+    {{#link-to 'task' this.name}}{{name}}{{/link-to}}
     {{#if isExpanded}}
     {{control "treeBranch" content}}
     {{/if}}
