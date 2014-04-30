@@ -1,0 +1,37 @@
+<!doctype html>
+<html ng-app>
+  <head>
+  </head>
+  <body>
+    <div ng-controller="BuildPipelineController">
+      <div>
+      <label>Name:</label>
+      <button ng-click="addStage()">Add a new stage</button>
+      <div>
+        {{pipeline.dotFormat}}
+      </div>
+    </div>
+    <script src="angular.min.js"></script>
+    <script>
+      var defaultPipeline = { stages: [ 'A', 'B', 'C' ] };
+
+      function BuildPipelineController($scope) {
+        var pipeline = { dotFormat: "" };
+        pipeline.dotFormat = "dotty";
+        $scope.pipeline = pipeline;
+
+        $scope.buildDotFormat = function() {
+          var dot = "digraph {\n";
+          var stages = defaultPipeline.stages
+          for (var i = 0; i < stages.length; i++) {
+            dot = dot + stages[i] + ";\n";
+          };
+          dot = dot + "}";
+          pipeline.dotFormat = dot;
+        };
+
+        $scope.buildDotFormat();
+      };
+      </script>
+  </body>
+</html>
