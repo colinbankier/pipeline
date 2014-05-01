@@ -5,29 +5,53 @@
   <body>
     <div ng-controller="BuildPipelineController">
       <div>
+      <form ng-submit="addStage()">
       <label>Name:</label>
-      <button ng-click="addStage()">Add a new stage</button>
+      <input ng-model="newStage.name"/>
+      <button>Add a new stage</button>
+      </form>
       <div>
         {{pipeline.dotFormat}}
       </div>
     </div>
     <script src="angular.min.js"></script>
     <script>
-      var defaultPipeline = { stages: [ 'A', 'B', 'C' ] };
+      var defaultPipeline = {
+        stages: [
+        {id: 'A'},
+        {id: 'B'},
+        {id: 'C'}
+        ],
+        triggers: [
+        {from: 'A', to: 'C'},
+        {from: 'B', to: 'C'}
+        ]
+        };
 
       function BuildPipelineController($scope) {
-        var pipeline = { dotFormat: "" };
+        var pipeline = { dotFormat: "", stages: defaultPipeline.stages, triggers: defaultPipeline.triggers };
         pipeline.dotFormat = "dotty";
         $scope.pipeline = pipeline;
 
         $scope.buildDotFormat = function() {
           var dot = "digraph {\n";
-          var stages = defaultPipeline.stages
+          var stages = pipeline.stages;
+          var triggers = pipeline.triggers;
           for (var i = 0; i < stages.length; i++) {
-            dot = dot + stages[i] + ";\n";
+            dot = dot + stages[i].id + ";\n";
+          };
+          for (var i = 0; i < triggers.length; i++) {
+            dot = dot + triggers[i].from + " -> " + triggers[i].to + ";\n";
           };
           dot = dot + "}";
           pipeline.dotFormat = dot;
+        };
+
+        $scope.newStage = { name: "" };
+        $scope.addStage = function() {
+          var newStage = {id: $scope.newStage.name};
+          pipeline.stages.push(newStage);
+          $scope.buildDotFormat();
         };
 
         $scope.buildDotFormat();
