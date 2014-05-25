@@ -1,4 +1,6 @@
-App = Ember.Application.create();
+App = Ember.Application.create({
+  LOG_TRANSITIONS: true
+});
 
 var pipeline = {
     name: 'Root Pipeline',
@@ -33,9 +35,10 @@ App.DesignRoute = Ember.Route.extend({
 
 App.TaskRoute = Ember.Route.extend({
   model: function(params) {
-    // params.post_path
-    var path = String.split('|', params.post_path);
-    return this.findTask(pipeline, path);
+    var path = params.task_path.split('|');
+    var task = this.findTask(pipeline, path);
+    console.log(task);
+    return pipeline;
   },
   findTask: function(pipeline, path) {
     if (path.length == 1 &&
