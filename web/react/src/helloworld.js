@@ -15,26 +15,3 @@ var BarComponent = React.createClass({
     return <div>bar</div>;
   }
 });
- 
-var Router = Backbone.Router.extend({
-  routes : {
-    "foo" : "foo",
-    "bar" : "bar"
-  },
-  foo : function() {
-    React.renderComponent(
-      <FooComponent />,
-      document.body
-    );
-  },
-  bar : function() {
-    React.renderComponent(
-      <BarComponent />,
-      document.body
-    );
-  }
-});
- 
-new Router();
- 
-Backbone.history.start();
