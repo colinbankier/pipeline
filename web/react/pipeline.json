@@ -1,0 +1,13 @@
+{ "type": "pipeline",
+  "name": "My First Pipeline",
+  "tasks": [
+    {
+      "type": "task",
+      "name": "task 1"
+    },
+    {
+      "type": "task",
+      "name": "task 2"
+    }
+  ]
+}
