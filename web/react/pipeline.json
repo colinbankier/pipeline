@@ -2,12 +2,33 @@
   "name": "My First Pipeline",
   "tasks": [
     {
+    "type": "task",
+    "name": "task 1"
+  },
+  {
+    "type": "task",
+    "name": "task 2"
+  },
+  {
+    "type": "pipeline",
+    "name": "Nested Pipeline",
+    "tasks": [
+      {
       "type": "task",
-      "name": "task 1"
+      "name": "Nested A"
     },
     {
-      "type": "task",
-      "name": "task 2"
+      "type": "pipeline",
+      "name": "Double Nested Pipeline",
+      "tasks": [
+        {
+        "type": "task",
+        "name": "Nested AA"
+      }
+      ]
     }
+    ]
+  }
+
   ]
 }

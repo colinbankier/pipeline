@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <title>Pipeline</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
   </head>
   <body>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <a class="brand" href="#">Pipeline</a>
+        <ul class="nav">
+          <li><a>Design</a></li>
+        </ul>
+      </div>
+    </div>
     <script src="bower_components/react/react-with-addons.js"></script>
     <script src="bower_components/react/JSXTransformer.js"></script>
     <script src="bower_components/director/build/director.js"></script>
     <script src="bower_components/jquery/jquery.js"></script>
-    <div id="content"></div>
+    <div id="content" class="container"></div>
     <script type="text/jsx" src="build/pipeline.js">
     </script>
   </body>
