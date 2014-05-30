@@ -4,6 +4,7 @@
   "dependencies": {
     "director": "~1.2.0",
     "react": "~0.10.0",
-    "jquery": "~1.10.0"
+    "jquery": "~1.10.0",
+    "bootstrap": "~3.1.1"
   }
 }
