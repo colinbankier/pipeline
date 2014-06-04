@@ -11,27 +11,43 @@ var Task = React.createClass({
   render: function() {
     return (
       <div className="task">
-      {this.props.name}
+      {this.props.index} {this.props.name}
       </div>
     );
   }
 });
 
 var Pipeline = React.createClass({
+  onCreateTask: function(task) {
+    var pipeline = this.props.pipeline
+    pipeline.tasks = pipeline.tasks.concat([task]);
+    this.props.onUpdate(pipeline, this.props.path);
+  },
+  onUpdate: function (pipeline) {
+    alert("pipeline update " + pipeline.name + " " + this.props.pipeline.name);
+    alert(this.props.parent);
+  },
   render: function() {
-    var taskNodes = this.props.tasks.map(function (task) {
+    var onUpdate = this.props.onUpdate
+    var parentPath = this.props.path;
+    var index = 0;
+    var taskNodes = this.props.pipeline.tasks.map(function (task) {
+      var element;
+      var path = parentPath.concat(index);
       if (task.type == "pipeline") {
-      return <Pipeline name={task.name} tasks={task.tasks} />;
+      element = <Pipeline pipeline={task} onUpdate={onUpdate} path={path} index={index} />;
       } else {
-      return <Task name={task.name} />;
+      element = <Task name={task.name} path={path} index={index} />;
       }
+      index = index + 1;
+      return element;
     });
     return (
       <div className="pipeline">
       <h2 className="pipelineName">
-       {this.props.name}
+      {this.props.index} {this.props.pipeline.name}
        </h2>
-       <AddTask/>
+       <AddTask pipeline={this.props.pipeline} onCreateTask={this.onCreateTask}/>
       <div className="taskList">
         {taskNodes}
       </div>
@@ -53,6 +69,18 @@ var PipelineView = React.createClass({
       }.bind(this)
     });
   },
+  updatePipeline: function(pipeline, path) {
+    var patchMap = path.reduceRight(function(acc, index) {
+      var tasks = {};
+      tasks[index] = acc;
+      return { tasks: tasks};
+    }, pipeline);
+    console.log("patchMap");
+    console.log(patchMap);
+    var newState = I(this.state.data).patch(patchMap);
+    console.log(newState.dump());
+    this.setState({data: newState.dump()});
+  },
   getInitialState: function() {
     return {data: {name: "", tasks: []}};
   },
@@ -61,7 +89,7 @@ var PipelineView = React.createClass({
   },
   render: function() {
     return (
-      <Pipeline name={this.state.data.name} tasks={this.state.data.tasks} />
+      <Pipeline pipeline={this.state.data} path={[]} onUpdate={this.updatePipeline} />
     );
   }
 });
@@ -149,11 +177,36 @@ var BootstrapModal = React.createClass({
   }
 });
 
+// Not used - just reference
+var TaskForm = React.createClass({
+  handleSubmit: function() {
+    var name = this.refs.name.getDOMNode().value.trim();
+    this.props.onCreateTask({name: name});
+    if (!name) {
+      return false;
+    }
+  },
+  render: function() {
+    return (
+      <div className="taskForm">
+      <form className="taskForm" onSubmit={this.handleSubmit}>
+      <input type="text" placeholder="A task" ref="name" />
+      </form>
+      </div>
+    );
+  }
+});
+
 var AddTask = React.createClass({
   handleCancel: function() {
     if (confirm('Are you sure you want to cancel?')) {
       this.refs.modal.close();
     }
+  },
+  handleSubmit: function() {
+    var name = this.refs.name.getDOMNode().value.trim();
+    this.props.onCreateTask({name: name});
+    this.refs.modal.close();
   },
   createTask: function() {
   },
@@ -165,9 +218,11 @@ var AddTask = React.createClass({
         confirm="OK"
         cancel="Cancel"
         onCancel={this.handleCancel}
-        onConfirm={this.closeModal}
+        onConfirm={this.handleSubmit}
         title="Hello, Bootstrap!">
-          This is a React component powered by jQuery and Bootstrap!
+      <div className="taskForm">
+      <input type="text" placeholder="A task" ref="name" />
+      </div>
       </BootstrapModal>
     );
     return (
