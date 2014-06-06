@@ -205,10 +205,13 @@ var AddTask = React.createClass({
   },
   handleSubmit: function() {
     var name = this.refs.name.getDOMNode().value.trim();
-    this.props.onCreateTask({name: name});
+    var type = jQuery("input[name=typeSelector]:checked").val()
+    var task = {name: name, type: type}
+    if (type == "pipeline") {
+      task.tasks = [];
+    }
+    this.props.onCreateTask(task);
     this.refs.modal.close();
-  },
-  createTask: function() {
   },
   render: function() {
     var modal = null;
@@ -220,8 +223,11 @@ var AddTask = React.createClass({
         onCancel={this.handleCancel}
         onConfirm={this.handleSubmit}
         title="Hello, Bootstrap!">
-      <div className="taskForm">
+      <div className="thistaskForm">
+      <form class="newTaskthing" name="newTask">
       <input type="text" placeholder="A task" ref="name" />
+      <div>I am here</div>
+      </form>
       </div>
       </BootstrapModal>
     );
@@ -239,7 +245,22 @@ var AddTask = React.createClass({
     this.refs.modal.close();
   }
 });
+      // <div>I am here</div>
+      // <div>I am here</div>
+      // <div>I am here</div>
+      // <div>I am here</div>
+      // <div>I am here</div>
+      // <div>I am here</div>
+      // <div>I am here</div>
+      // <div>I am here</div>
+      // <div>I am here</div>
 
+      // <label for="taskSelector">Task</label>
+      // <label for="pipelineSelector">Pipeline</label>
+      // <div className="typeSelector">
+      // <input type="radio" id="taskSelector" name="typeSelector" value="task" defaultChecked={true}/><label for="taskSelector">Task</label>
+      // <input type="radio" id="pipelineSelector" name="typeSelector" value="pipeline"/><label for="pipelineSelector">Pipeline</label>
+      //   </div>
 React.renderComponent(
   <PipelineView url="pipeline.json"/>,
   document.getElementById('content')
