@@ -2,6 +2,8 @@
 * @jsx React.DOM
 */
 
+
+
 var data = [
 {author: "Pete Hunt", text: "This is one comment"},
 {author: "Jordan Walke", text: "This is *another* comment"}
@@ -20,7 +22,6 @@ var Task = React.createClass({
 var Pipeline = React.createClass({
   onCreateTask: function(task) {
     var pipeline = this.props.pipeline
-    pipeline.tasks = pipeline.tasks.concat([task]);
     this.props.onUpdate(pipeline, this.props.path);
   },
   onUpdate: function (pipeline) {
@@ -28,7 +29,7 @@ var Pipeline = React.createClass({
     alert(this.props.parent);
   },
   render: function() {
-    var onUpdate = this.props.onUpdate
+    var onUpdate = this.props.onUpdate;
     var parentPath = this.props.path;
     var index = 0;
     var taskNodes = this.props.pipeline.tasks.map(function (task) {
@@ -42,11 +43,15 @@ var Pipeline = React.createClass({
       index = index + 1;
       return element;
     });
+    console.log("render");
+    console.log(this.props.pipeline);
+    console.log(this.props.path);
     return (
       <div className="pipeline">
       <h2 className="pipelineName">
       {this.props.index} {this.props.pipeline.name}
        </h2>
+       <OverlayTriggerInstance pipeline={this.props.pipeline} path={this.props.path} onUpdate={this.onCreateTask}/>
        <AddTask pipeline={this.props.pipeline} onCreateTask={this.onCreateTask}/>
       <div className="taskList">
         {taskNodes}
@@ -70,6 +75,8 @@ var PipelineView = React.createClass({
     });
   },
   updatePipeline: function(pipeline, path) {
+    console.log("path");
+    console.log(path);
     var patchMap = path.reduceRight(function(acc, index) {
       var tasks = {};
       tasks[index] = acc;
@@ -90,6 +97,63 @@ var PipelineView = React.createClass({
   render: function() {
     return (
       <Pipeline pipeline={this.state.data} path={[]} onUpdate={this.updatePipeline} />
+    );
+  }
+});
+
+var MyModal = React.createClass({
+  handleSubmit: function() {
+    var name = this.refs.name.getDOMNode().value.trim();
+    var type = jQuery("input[name=typeSelector]:checked").val()
+    var task = {name: name, type: type}
+    if (type == "pipeline") {
+      task.tasks = [];
+    }
+    this.createTask(task);
+    this.props.onRequestHide();
+  },
+  createTask: function(task) {
+    console.log(this.props.pipeline);
+    var pipeline = this.props.pipeline
+    console.log("I have pipeline ");
+    console.log(pipeline);
+    pipeline.tasks = pipeline.tasks.concat([task]);
+    console.log("I have pipeline ");
+    console.log(pipeline);
+    this.props.onUpdate(pipeline, this.props.path);
+  },
+  render: function() {
+    return this.transferPropsTo(
+        <Modal title="Modal heading" animation={false}>
+          <div className="modal-body">
+      <input type="text" placeholder="A task" ref="name" />
+      <div className="typeSelector">
+      <input type="radio" id="taskSelector" name="typeSelector" value="task" defaultChecked={true}/><label for="taskSelector">Task</label>
+      <input type="radio" id="pipelineSelector" name="typeSelector" value="pipeline"/><label for="pipelineSelector">Pipeline</label>
+        </div>
+      <div>I am here</div>
+          </div>
+          <div className="modal-footer">
+        <Button
+          onClick={this.handleSubmit}
+          className="btn-primary">
+          Ok
+        </Button>
+        <Button onClick={this.props.onRequestHide}>
+          Cancel
+        </Button>
+          </div>
+        </Modal>
+      );
+  }
+});
+
+var OverlayTriggerInstance = React.createClass({
+  render: function() {
+    return (
+    <ModalTrigger modal={<MyModal pipeline={this.props.pipeline} onUpdate={this.props.onUpdate} />}>
+      <Button bsStyle="primary" bsSize="large">Launch demo modal</Button>
+    </ModalTrigger>
     );
   }
 });
@@ -265,3 +329,4 @@ React.renderComponent(
   <PipelineView url="pipeline.json"/>,
   document.getElementById('content')
 );
+// React.renderComponent(OverlayTriggerInstance, document.getElementById('jqueryexample'));
