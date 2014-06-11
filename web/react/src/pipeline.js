@@ -13,10 +13,6 @@ var Task = React.createClass({
 });
 
 var Pipeline = React.createClass({
-  onCreateTask: function(task) {
-    var pipeline = this.props.pipeline
-    this.props.onUpdate(pipeline, this.props.path);
-  },
   render: function() {
     var onUpdate = this.props.onUpdate;
     var parentPath = this.props.path;
@@ -32,12 +28,13 @@ var Pipeline = React.createClass({
       index = index + 1;
       return element;
     });
+    var addTaskPath = parentPath.concat(index);
     return (
       <div className="pipeline">
       <h2 className="pipelineName">
       {this.props.index} {this.props.pipeline.name}
        </h2>
-       <AddTask pipeline={this.props.pipeline} path={this.props.path} onUpdate={this.onCreateTask}/>
+       <AddTask pipeline={this.props.pipeline} path={addTaskPath} onUpdate={this.props.onUpdate}/>
       <div className="taskList">
         {taskNodes}
       </div>
@@ -59,17 +56,18 @@ var PipelineView = React.createClass({
       }.bind(this)
     });
   },
-  updatePipeline: function(pipeline, path) {
-    var patchMap = path.reduceRight(function(acc, index) {
-      var tasks = {};
-      tasks[index] = acc;
-      return { tasks: tasks};
-    }, pipeline);
-    console.log("patchMap");
-    console.log(patchMap);
-    var newState = I(this.state.data).patch(patchMap);
-    console.log(newState.dump());
-    this.setState({data: newState.dump()});
+  updatePipeline: function(task, path) {
+    var pipeline = this.state.data;
+    var childPipeline = pipeline;
+    for (i = 0; i < path.length; i++) {
+      var index = path[i];
+      if (i == path.length - 1) {
+        childPipeline.tasks[index] = task;
+      } else {
+        childPipeline = childPipeline.tasks[index];
+      }
+    }
+    this.setState({data: pipeline});
   },
   getInitialState: function() {
     return {data: {name: "", tasks: []}};
@@ -90,25 +88,27 @@ var EditTaskModal = React.createClass({
     var type = jQuery("input[name=typeSelector]:checked").val()
     var task = {name: name, type: type}
     if (type == "pipeline") {
-      task.tasks = [];
+      task.tasks = []; //{0: {type: "task", name: "New task"}};
     }
     this.createTask(task);
     this.props.onRequestHide();
   },
   createTask: function(task) {
-    var pipeline = this.props.pipeline
-    pipeline.tasks = pipeline.tasks.concat([task]);
-    this.props.onUpdate(pipeline, this.props.path);
+    this.props.onUpdate(task, this.props.path);
   },
   render: function() {
     return this.transferPropsTo(
         <Modal title="Modal heading" animation={false}>
-          <div className="modal-body">
+          <div className="modal-body form-group">
       <input type="text" placeholder="A task" ref="name" />
-      <div className="typeSelector">
-      <input type="radio" id="taskSelector" name="typeSelector" value="task" defaultChecked={true}/><label for="taskSelector">Task</label>
-      <input type="radio" id="pipelineSelector" name="typeSelector" value="pipeline"/><label for="pipelineSelector">Pipeline</label>
-        </div>
+      <label>
+        <input type="radio" name="typeSelector" value="task" defaultChecked={true}/>
+        Task
+      </label>
+      <label>
+        <input type="radio" id="pipelineSelector" name="typeSelector" value="pipeline"/>
+        Pipeline
+        </label>
       <div>I am here</div>
           </div>
           <div className="modal-footer">
@@ -129,7 +129,7 @@ var EditTaskModal = React.createClass({
 var AddTask = React.createClass({
   render: function() {
     return (
-    <ModalTrigger modal={<EditTaskModal pipeline={this.props.pipeline} onUpdate={this.props.onUpdate} />}>
+    <ModalTrigger modal={<EditTaskModal pipeline={this.props.pipeline} path={this.props.path} onUpdate={this.props.onUpdate} />}>
       <Button>Add task</Button>
     </ModalTrigger>
     );
