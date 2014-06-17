@@ -18,18 +18,20 @@ var app = app || {};
         if (task.type == "pipeline") {
           element = <Pipeline pipeline={task} onUpdate={onUpdate} path={path} index={index} />;
         } else {
-          element = <Task name={task.name} path={path} index={index} />;
+          element = <Task task={task} path={path} onUpdate={onUpdate} index={index} />;
         }
         index = index + 1;
         return element;
       });
       var addTaskPath = parentPath.concat(index);
+      var newTask = {};
       return (
         <div className="pipeline">
         <h2 className="pipelineName">
         {this.props.index} {this.props.pipeline.name}
         </h2>
-        <AddTask pipeline={this.props.pipeline} path={addTaskPath} onUpdate={this.props.onUpdate}/>
+        <AddTask task={this.props.pipeline} path={this.props.path} onUpdate={this.props.onUpdate} text="Edit"/>
+        <AddTask task={newTask} path={addTaskPath} onUpdate={this.props.onUpdate} text="Add task"/>
         <div className="taskList">
         {taskNodes}
         </div>

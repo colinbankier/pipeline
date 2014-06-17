@@ -9,8 +9,8 @@ var app = app || {};
   app.AddTask = React.createClass({
     render: function() {
       return (
-        <ModalTrigger modal={<EditTaskModal pipeline={this.props.pipeline} path={this.props.path} onUpdate={this.props.onUpdate} />}>
-        <Button>Add task</Button>
+        <ModalTrigger modal={<EditTaskModal task={this.props.task} path={this.props.path} onUpdate={this.props.onUpdate} />}>
+        <Button>{this.props.text}</Button>
         </ModalTrigger>
       );
     }
