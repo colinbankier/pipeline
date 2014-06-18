@@ -27,11 +27,13 @@ var app = app || {};
       var newTask = {};
       return (
         <div className="pipeline">
-        <h2 className="pipelineName">
-        {this.props.index} {this.props.pipeline.name}
-        </h2>
+        <span className="pipelineName">
+        {this.props.pipeline.name}
+        </span>
+        <ButtonToolbar>
         <AddTask task={this.props.pipeline} path={this.props.path} onUpdate={this.props.onUpdate} text="Edit"/>
         <AddTask task={newTask} path={addTaskPath} onUpdate={this.props.onUpdate} text="Add task"/>
+        </ButtonToolbar>
         <div className="taskList">
         {taskNodes}
         </div>

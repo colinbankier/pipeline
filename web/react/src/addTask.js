@@ -10,7 +10,7 @@ var app = app || {};
     render: function() {
       return (
         <ModalTrigger modal={<EditTaskModal task={this.props.task} path={this.props.path} onUpdate={this.props.onUpdate} />}>
-        <Button>{this.props.text}</Button>
+        <Button bsStyle="link" bsSize="small">{this.props.text}</Button>
         </ModalTrigger>
       );
     }

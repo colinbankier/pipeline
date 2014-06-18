@@ -18,9 +18,6 @@ var app = app || {};
       if (type == "pipeline" && typeof task.tasks === "undefined") {
         task.tasks = [];
       }
-      console.log(task);
-      console.log("path:");
-      console.log(this.props.path);
       this.createTask(task);
       this.props.onRequestHide();
     },
