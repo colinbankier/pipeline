@@ -9,20 +9,17 @@ var app = app || {};
 
   app.EditTaskModal = React.createClass({
     handleSubmit: function() {
-      var name = this.refs.name.getDOMNode().value.trim();
-      var type = jQuery("input[name=typeSelector]:checked").val();
       var task = this.state.task;
-      task.name = name;
-      task.type = type;
-      // var task = {name: name, type: type}
-      if (type == "pipeline" && typeof task.tasks === "undefined") {
-        task.tasks = [];
+      if (task.type == "task") {
+        delete task.tasks;
+      } else if (task.type == "pipeline") {
+        if (typeof task.tasks === "undefined") {
+          task.tasks = [];
+        }
+        delete task.command;
       }
-      this.createTask(task);
-      this.props.onRequestHide();
-    },
-    createTask: function(task) {
       this.props.onUpdate(task, this.props.path);
+      this.props.onRequestHide();
     },
     getInitialState: function() {
       return {task: {name: ""}};
@@ -35,20 +32,36 @@ var app = app || {};
       task.name = event.target.value;
       this.setState({task: task});
     },
+    handleTypeChange: function(event) {
+      var task = this.state.task;
+      task.type = event.target.value;
+      this.setState({task: task});
+    },
+    handleCommandChange: function(event) {
+      var task = this.state.task;
+      task.command = event.target.value;
+      this.setState({task: task});
+    },
     render: function() {
       return this.transferPropsTo(
         <Modal title="Modal heading" animation={false}>
         <div className="modal-body form-group">
-        <input type="text" placeholder="A task" ref="name" defaultValue={this.state.task.name} onChange={this.handleChange}/>
+        <input type="text" placeholder="A task" ref="name" defaultValue={this.state.task.name} onChange={this.handleNameChange}/>
         <label>
-        <input type="radio" name="typeSelector" value="task" defaultChecked={this.state.task.type == 'task' || typeof this.state.task.type === "undefined"}/>
+        <input type="radio" name="typeSelector" value="task" defaultChecked={this.state.task.type == 'task' || typeof this.state.task.type === "undefined"} onChange={this.handleTypeChange}/>
         Task
         </label>
         <label>
-        <input type="radio" id="pipelineSelector" name="typeSelector" value="pipeline" defaultChecked={this.state.task.type == 'pipeline'}/>
+        <input type="radio" id="pipelineSelector" name="typeSelector" value="pipeline" defaultChecked={this.state.task.type == 'pipeline'} onChange={this.handleTypeChange}/>
         Pipeline
         </label>
-        <div>I am here</div>
+        { this.state.task.type == 'task' ?
+      <label>
+      Command
+        <input type="text" placeholder="Shell command to execute" ref="command" defaultValue={this.state.task.command} onChange={this.handleCommandChange}/>
+      </label> :
+        <span></span>
+        }
         </div>
         <div className="modal-footer">
         <Button
