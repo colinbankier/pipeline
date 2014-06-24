@@ -10,14 +10,16 @@ var app = app || {};
 
   var PipelineView = app.PipelineView;
   var PipelineList = app.PipelineList;
-var author = function () { console.log("author"); },
-          books = function () { console.log("books"); };
+
   var PipelineApp = React.createClass({
     componentDidMount: function () {
       var setState = this.setState;
+      var target = this;
       var router = Router({
         '/': setState.bind(this, {nowShowing: app.PIPELINE_LIST}),
-        '/design': setState.bind(this, {nowShowing: app.DESIGN})
+        '/design/:pipelineName': function(pipelineName) {
+          target.setState({nowShowing: app.DESIGN, pipeline: pipelineName});
+        }
       });
       router.init('/');
     },
@@ -29,6 +31,7 @@ var author = function () { console.log("author"); },
     },
     render: function() {
       var element;
+      console.log(this.state.nowShowing);
       switch (this.state.nowShowing) {
         case app.PIPELINE_LIST:
           element = <PipelineList url="pipelines.json"/>;
