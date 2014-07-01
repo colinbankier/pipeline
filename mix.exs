@@ -4,8 +4,7 @@ defmodule Pipeline.Mixfile do
   def project do
     [ app: :pipeline,
       version: "0.0.1",
-      dynamos: [PipelineApp.Dynamo],
-      compilers: [:elixir, :dynamo, :app],
+      compilers: [:elixir, :app],
       env: [prod: [compile_path: "ebin"]],
       compile_path: "tmp/#{Mix.env}/pipeline/ebin",
       deps: deps ]
@@ -13,17 +12,16 @@ defmodule Pipeline.Mixfile do
 
   # Configuration for the OTP application
   def application do
-    [ applications: [:cowboy, :dynamo, :exec, :rethinkdb],
+    [ applications: [:cowboy, :exec, :rethinkdb],
       mod: { PipelineApp, [] } ]
   end
 
   defp deps do
-    [ { :cowboy, github: "extend/cowboy" },
-      { :dynamo, "0.1.0-dev", github: "elixir-lang/dynamo" },
-      {:exec, "v1.0-84-ga84d95f", [github: "saleyn/erlexec", app: "ebin/exec.app", 
-      ref: "a84d95f46422163c24ffef7a123efe9b15d56253"]},
+    [
+      {:exec, [github: "saleyn/erlexec", app: "ebin/exec.app",
+        ref: "a84d95f46422163c24ffef7a123efe9b15d56253"]},
+      { :cowboy, github: "extend/cowboy" },
       { :jsex, github: "talentdeficit/jsex" },
-      { :rethinkdb, github: "azukiapp/elixir-rethinkdb" }
     ]
   end
 end

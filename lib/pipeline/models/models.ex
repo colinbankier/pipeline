@@ -1,4 +1,9 @@
 defmodule Models do
-  defrecord Pipeline, id: nil, name: nil, tasks: []
-  defrecord Task, id: nil, name: nil, command: nil
+  defmodule Pipeline do
+    defstruct type: :pipeline, id: nil, name: nil, tasks: []
+  end
+
+  defmodule Task do
+    defstruct type: :task, id: nil, name: nil, command: nil
+  end
 end

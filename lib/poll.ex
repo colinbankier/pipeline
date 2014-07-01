@@ -7,11 +7,11 @@ defmodule Poll do
     poll(pipeline, build_number)
   end
 
-  def poll(state = PipelineResult[status: :ok], pipeline, build_number) do
+  def poll(state = %{status: :ok}, pipeline, build_number) do
    state
   end
 
-  def poll(state = PipelineResult[status: :error], pipeline, build_number) do
+  def poll(state = %{status: :error}, pipeline, build_number) do
    state
   end
 

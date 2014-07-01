@@ -17,10 +17,10 @@ defmodule PipelineParser do
   def convert elem do
     cond do
       Dict.has_key? elem, "tasks" ->
-        Pipeline.new name: elem["name"],
-         tasks: Enum.map(elem["tasks"], &(convert(&1)))
+        %Pipeline{name: elem["name"],
+         tasks: Enum.map(elem["tasks"], &(convert(&1)))}
       Dict.has_key? elem, "command" ->
-        Task.new name: elem["name"], command: elem["command"]
+        %Task{name: elem["name"], command: elem["command"]}
     end
   end
 end

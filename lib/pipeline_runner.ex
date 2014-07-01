@@ -4,16 +4,16 @@ defmodule PipelineRunner do
   alias Result.PipelineResult
   alias Result.TaskResult
 
-  def initialize(pipeline = Pipeline[]) do
+  def initialize(pipeline = %{type: :pipeline}) do
     tasks = Enum.map(pipeline.tasks, &initialize/1)
-    PipelineResult.new id: 1, name: pipeline.name, tasks: tasks
+    %PipelineResult{id: 1, name: pipeline.name, tasks: tasks}
   end
 
-  def initialize(task = Task[]) do
-    TaskResult.new name: task.name
+  def initialize(task = %{type: :task}) do
+    %TaskResult{name: task.name}
   end
 
-  def run(pipeline = Pipeline[]) do
+  def run(pipeline = %{type: :pipeline}) do
     trigger [pipeline.name], pipeline
   end
 
@@ -27,12 +27,12 @@ defmodule PipelineRunner do
     {:ok, build_number}
   end
 
-  def _trigger(path, task = Task[], pipeline, build_number) do
+  def _trigger(path, task = %{type: :task}, pipeline, build_number) do
     update_current_task_status path, :running, pipeline, build_number
     TaskRunner.run_task(path, pipeline, build_number, PipelineApp.default_working_dir)
   end
 
-  def _trigger(path, task = Pipeline[], pipeline, build_number) do
+  def _trigger(path, task = %{type: :pipeline}, pipeline, build_number) do
     update_current_task_status path, :running, pipeline, build_number
     first_child = Enum.first(task.tasks)
     child_path = List.insert_at(path, Enum.count(path), first_child.name)
@@ -66,11 +66,11 @@ defmodule PipelineRunner do
     end
   end
 
-  def find_sub_task(path, task = Task[]) do
+  def find_sub_task(path, task = %{type: :task}) do
     [task.name | path]
   end
 
-  def find_sub_task(path, pipeline = Pipeline[]) do
+  def find_sub_task(path, pipeline = %{type: :pipeline}) do
     task = pipeline.tasks |> Enum.first
     find_sub_task([pipeline.name | path], task)
   end
@@ -99,7 +99,7 @@ defmodule PipelineRunner do
     nil
   end
 
-  def update(state = PipelineResult[], build_number) do
+  def update(state = %{type: :pipeline_result}, build_number) do
     :ets.insert(:pipeline_results, { {state.name, build_number}, state})
   end
 
