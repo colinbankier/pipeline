@@ -14,11 +14,14 @@ var app = app || {};
         return <span className="taskName">{task.name}</span>;
       });
       var designUrl = "#design/" + this.props.pipeline.id;
+      var statusUrl = "#status/" + this.props.pipeline.id;
       return (
         <div className="pipeline">
+        <a href={statusUrl}>
         <span className="pipelineName">
         {this.props.pipeline.name}
         </span>
+        </a>
         <ButtonToolbar>
         </ButtonToolbar>
         <div className="taskList">

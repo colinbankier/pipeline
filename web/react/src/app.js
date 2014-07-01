@@ -7,9 +7,11 @@ var app = app || {};
 (function() {
   app.PIPELINE_LIST = 'pipelines';
   app.DESIGN = 'design';
+  app.STATUS = 'status';
 
   var PipelineView = app.PipelineView;
   var PipelineList = app.PipelineList;
+  var PipelineStatusView = app.PipelineStatusView;
 
   var PipelineApp = React.createClass({
     componentDidMount: function () {
@@ -19,6 +21,9 @@ var app = app || {};
         '/': setState.bind(this, {nowShowing: app.PIPELINE_LIST}),
         '/design/:pipelineName': function(pipelineName) {
           target.setState({nowShowing: app.DESIGN, pipeline: pipelineName});
+        },
+        '/status/:pipelineName': function(pipelineName) {
+          target.setState({nowShowing: app.STATUS, pipeline: pipelineName});
         }
       });
       router.init('/');
@@ -29,22 +34,22 @@ var app = app || {};
         editing: null
       };
     },
-    render: function() {
-      var element;
-      console.log(this.state.nowShowing);
+    displayedElement: function() {
       switch (this.state.nowShowing) {
         case app.PIPELINE_LIST:
-          element = <PipelineList url="pipelines.json"/>;
-          break;
+          return <PipelineList url="pipelines.json"/>;
         case app.DESIGN:
-          element = <PipelineView url="pipeline.json"/>;
-          break;
+          return <PipelineView url="pipeline.json"/>;
+        case app.STATUS:
+          return <PipelineStatusView url="pipelineStatus.json"/>;
         default:
-          element = <div>Not Found</div>;
+          return <div>Not Found</div>;
       }
+    },
+    render: function() {
       return (
         <div className="pipelineApp">
-        {element}
+        {this.displayedElement()}
         </div>
       );
     }
