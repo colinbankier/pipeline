@@ -83,7 +83,7 @@ defmodule PipelineRunner do
     end
   end
 
-  def find([ head | tail ], pipeline) when is_tuple(pipeline) do
+  def find([ head | tail ], pipeline) do
     if head == pipeline.name do
       [ next | rest ] = tail
       task = Enum.find(pipeline.tasks, fn(task) ->

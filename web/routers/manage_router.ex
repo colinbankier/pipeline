@@ -1,5 +1,4 @@
 defmodule ManageRouter do
-  use Dynamo.Router
   alias Models.Pipeline
   alias Models.Task
 
@@ -34,8 +33,8 @@ defmodule ManageRouter do
 
   post "pipeline/:pipeline_id/task/new" do
     {pipeline_id, _} = Integer.parse conn.params[:pipeline_id]
-    task = Task.new name: conn.params[:name],
-      pipeline_id: pipeline_id
+    task = %Task{name: conn.params[:name],
+      pipeline_id: pipeline_id}
     task = Repo.create task
     redirect conn, to: "/manage/pipeline/#{pipeline_id}"
   end

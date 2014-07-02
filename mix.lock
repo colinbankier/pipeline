@@ -12,4 +12,4 @@
   "postgrex": {:git, "git://github.com/ericmj/postgrex.git", "c4cc2dd050cab1af2597b5192bc629d4ab91ba98", []},
   "protobuf": {:git, "git://github.com/azukiapp/elixir-protobuf.git", "88171f9cacfb5e5e94b48151784bf68b9d2023f9", [tag: "v0.0.3"]},
   "ranch": {:git, "git://github.com/extend/ranch.git", "3189ef2d47843945efc96c224963380462c33d40", [ref: "0.10.0"]},
-  "rethinkdb": {:git, "git://github.com/azukiapp/elixir-rethinkdb.git", "56e305d628b847245c1eadb268f8fcbc0f03bcab", []}}
+  }

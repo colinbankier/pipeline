@@ -12,8 +12,7 @@ defmodule Pipeline.Mixfile do
 
   # Configuration for the OTP application
   def application do
-    [ applications: [:cowboy, :exec, :rethinkdb],
-      mod: { PipelineApp, [] } ]
+    [ applications: [:cowboy, :exec] ]
   end
 
   defp deps do

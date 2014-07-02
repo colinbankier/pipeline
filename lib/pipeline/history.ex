@@ -1,15 +1,14 @@
 defmodule PipelineHistory do
   alias Result.PipelineResult
   alias Result.TaskResult
-  use Rethinkdb
 
-  def store task=TaskResult[] do
+  def store task=%{type: :task_result} do
     result = to_map(task) |> _insert!
     id = result[:generated_keys] |> Enum.first
     task.id(id)
   end
 
-  def store pipeline=PipelineResult[] do
+  def store pipeline=%{type: :pipeline_result} do
     tasks = Enum.map(pipeline.tasks, &PipelineHistory.store/1)
     result = to_map(pipeline) |> _insert!
     id = result[:generated_keys] |> Enum.first
@@ -17,10 +16,9 @@ defmodule PipelineHistory do
   end
 
   def _insert! map do
-    r.table("task_results").insert(map).run!
   end
 
-  def to_map result=TaskResult[] do
+  def to_map result=%{type: :task_result} do
     [
       _type: type_for(result),
       path: result.path,
@@ -31,7 +29,7 @@ defmodule PipelineHistory do
     ]
   end
 
-  def to_map result=PipelineResult[] do
+  def to_map result=%{type: :pipeline_result} do
     [
       _type: type_for(result),
       path: result.path,
@@ -46,31 +44,31 @@ defmodule PipelineHistory do
     Enum.map(tasks, fn task -> task.path end)
   end
 
-  def type_for result=PipelineResult[] do
+  def type_for result=%{type: :pipeline_result} do
     "pipeline"
   end
 
-  def type_for result=TaskResult[] do
+  def type_for result=%{type: :task_result} do
     "task"
   end
 
   def get path, pipeline_build_number, build_number do
-    r.table("task_results").filter( path: path,
-      pipeline_build_number: pipeline_build_number,
-      build_number: build_number
-    ).run! |>
-    Enum.first |>
-    to_record
+    # r.table("task_results").filter( path: path,
+    #   pipeline_build_number: pipeline_build_number,
+    #   build_number: build_number
+    # ).run! |>
+    # Enum.first |>
+    # to_record
   end
 
   def get path, pipeline_build_number do
-    r.table("task_results").filter( path: path,
-      pipeline_build_number: pipeline_build_number,
-    ).order_by(
-      r.desc("build_number")
-    ).limit(1).run! |>
-    Enum.first |>
-    to_record
+    # r.table("task_results").filter( path: path,
+    #   pipeline_build_number: pipeline_build_number,
+    # ).order_by(
+    #   r.desc("build_number")
+    # ).limit(1).run! |>
+    # Enum.first |>
+    # to_record
   end
 
   def to_record dict do
