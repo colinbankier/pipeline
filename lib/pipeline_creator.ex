@@ -4,6 +4,6 @@ defmodule PipelineCreator do
   end
 
   def list do
-    [Pipeline.Models.Pipeline.new(name: "My Pipeline")]
+    [%Models.Pipeline{name: "My Pipeline"}]
   end
 end

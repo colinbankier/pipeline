@@ -6,11 +6,13 @@ defmodule PipelineRunner do
 
   def initialize(pipeline = %{type: :pipeline}) do
     tasks = Enum.map(pipeline.tasks, &initialize/1)
-    %PipelineResult{id: 1, name: pipeline.name, tasks: tasks}
+    %PipelineResult{id: 1, name: pipeline.name, tasks: tasks, build_number: 1,
+      pipeline_build_number: 1}
   end
 
   def initialize(task = %{type: :task}) do
-    %TaskResult{name: task.name}
+    %TaskResult{id: 1, name: task.name, build_number: 1,
+      pipeline_build_number: 1}
   end
 
   def run(pipeline = %{type: :pipeline}) do
@@ -34,7 +36,7 @@ defmodule PipelineRunner do
 
   def _trigger(path, task = %{type: :pipeline}, pipeline, build_number) do
     update_current_task_status path, :running, pipeline, build_number
-    first_child = Enum.first(task.tasks)
+    first_child = List.first(task.tasks)
     child_path = List.insert_at(path, Enum.count(path), first_child.name)
     _trigger(child_path, find(child_path, pipeline), pipeline, build_number)
   end
@@ -42,7 +44,7 @@ defmodule PipelineRunner do
   def update_current_task_status(path, status, pipeline, build_number) do
     current_result = current_state(pipeline, build_number)
     task_result = find path, current_result
-    new_result = update_pipeline_result current_result, path, task_result.status(status)
+    new_result = update_pipeline_result current_result, path, %{task_result | :status => status}
     new_result |> update(build_number)
   end
 
@@ -71,7 +73,7 @@ defmodule PipelineRunner do
   end
 
   def find_sub_task(path, pipeline = %{type: :pipeline}) do
-    task = pipeline.tasks |> Enum.first
+    task = pipeline.tasks |> List.first
     find_sub_task([pipeline.name | path], task)
   end
 
@@ -110,7 +112,7 @@ defmodule PipelineRunner do
       result ->
         nil
     end
-    find_or_init.(:ets.lookup(:pipeline_results, {pipeline.name, build_number}) |> Enum.first)
+    find_or_init.(:ets.lookup(:pipeline_results, {pipeline.name, build_number}) |> List.first)
   end
 
   def notify_task_complete pipeline, path, build_number, task_result do
@@ -127,7 +129,8 @@ defmodule PipelineRunner do
 
   def update_pipeline_result(pipeline_result, [ head | tail ], task_result) do
     updated_tasks = update_task_result(pipeline_result.tasks, tail, task_result)
-    pipeline_result.tasks(updated_tasks).status(task_result.status)
+    pipeline_result = %{pipeline_result | :tasks => updated_tasks}
+    %{pipeline_result | :status => task_result.status}
   end
 
   def update_task_result(tasks, path = [ head | tail ], task_result) do

@@ -20,9 +20,10 @@ defmodule PipelineHistoryTest do
     path = ["A pipeline", "A task"]
     pipeline_build_number = 1
     build_number = 1
-    result = TaskResult.new path: path,
+    result = %TaskResult{path: path,
       pipeline_build_number: pipeline_build_number,
       build_number: build_number
+      }
 
     result = store(result)
 
@@ -40,9 +41,10 @@ defmodule PipelineHistoryTest do
   end
 
   test "returns history of pipeline runs" do
-    pipe = Pipeline.new name: "History", tasks: [
+    pipe = %Pipeline{name: "History", tasks: [
       create_task("1"),
     ]
+  }
 
     PipelineRunner.run(pipe) == {:ok, 1}
     result1 = poll_until_complete pipe, 1

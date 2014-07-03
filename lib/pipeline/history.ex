@@ -4,7 +4,7 @@ defmodule PipelineHistory do
 
   def store task=%{type: :task_result} do
     result = to_map(task) |> _insert!
-    id = result[:generated_keys] |> Enum.first
+    id = result[:generated_keys] |> List.first
     task.id(id)
   end
 
@@ -83,22 +83,24 @@ defmodule PipelineHistory do
   end
 
   def to_task_record dict do
-    TaskResult.new id: dict[:id],
+    %TaskResult{id: dict[:id],
       path: dict[:path],
       pipeline_build_number: round(dict[:pipeline_build_number]),
       build_number: round(dict[:build_number]),
       status: binary_to_atom(dict[:status]),
       output: dict[:output]
+      }
   end
 
   def to_pipeline_record dict do
     pipeline_build_number = round(dict[:pipeline_build_number])
-    PipelineResult.new id: dict[:id],
+    %PipelineResult{id: dict[:id],
       path: dict[:path],
       pipeline_build_number: pipeline_build_number,
       build_number: round(dict[:build_number]),
       status: binary_to_atom(dict[:status]),
       tasks: get_tasks(dict[:tasks], pipeline_build_number)
+      }
   end
 
   def get_tasks task_paths, pipeline_build_number do
