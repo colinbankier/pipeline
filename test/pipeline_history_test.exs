@@ -12,6 +12,7 @@ defmodule PipelineHistoryTest do
   setup do
     :ets.delete_all_objects :pipeline_results
     BuildNumber.clear_all
+    Repo.delete_all(Result.RunResult)
     Database.setup
     :ok
   end

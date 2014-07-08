@@ -20,6 +20,7 @@ defmodule PipelineApp.Supervisor do
 
   def init(:ok) do
     children = [
+      worker(Repo, [])
     ]
     :ets.new :pipeline_results, [:named_table, :public]
     :ets.new :task_output, [:named_table, :public]

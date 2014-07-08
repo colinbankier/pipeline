@@ -29,16 +29,27 @@ defmodule PipelineRunner do
     {:ok, build_number}
   end
 
-  def _trigger(path, task = %{type: :task}, pipeline, build_number) do
+  def _trigger(path, task = %Task{type: :task}, pipeline, build_number) do
+    IO.puts "trigger task"
     update_current_task_status path, :running, pipeline, build_number
+    IO.puts "trigger task"
     TaskRunner.run_task(path, pipeline, build_number, PipelineApp.default_working_dir)
+    IO.puts "trigger task"
   end
 
-  def _trigger(path, task = %{type: :pipeline}, pipeline, build_number) do
+  def _trigger(path, task = %Pipeline{type: :pipeline}, pipeline, build_number) do
+    IO.puts "trigger pipeline"
     update_current_task_status path, :running, pipeline, build_number
     first_child = List.first(task.tasks)
     child_path = List.insert_at(path, Enum.count(path), first_child.name)
+    IO.puts "trigger pipeline"
+    update_current_task_status path, :running, pipeline, build_number
     _trigger(child_path, find(child_path, pipeline), pipeline, build_number)
+    IO.puts "trigger pipeline"
+  end
+
+  def _trigger(path = nil, _, _, _) do
+    IO.puts "I don't know why I'm here."
   end
 
   def update_current_task_status(path, status, pipeline, build_number) do
@@ -117,8 +128,13 @@ defmodule PipelineRunner do
 
   def notify_task_complete pipeline, path, build_number, task_result do
     update_pipeline_result(current_state(pipeline, build_number), path, task_result) |> update(build_number)
+    pipeline_build_number = BuildNumber.next! path
+    task_result = %{task_result | pipeline_build_number: pipeline_build_number,
+      build_number: pipeline_build_number}
+    PipelineHistory.store(task_result)
     if task_result.status == :ok do
       path = find_next_task(path, pipeline)
+      IO.puts "triggering next"
       _trigger(path, find(path, pipeline), pipeline, build_number)
     end
   end
