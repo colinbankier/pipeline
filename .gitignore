@@ -2,5 +2,6 @@
 /deps
 /tmp/dev
 /tmp/test
+test/api/node_modules
 erl_crash.dump
 acceptance_tests/gems
