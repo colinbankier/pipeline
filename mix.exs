@@ -4,16 +4,14 @@ defmodule Pipeline.Mixfile do
   def project do
     [ app: :pipeline,
       version: "0.0.1",
-      compilers: [:elixir, :app],
-      env: [prod: [compile_path: "ebin"]],
-      compile_path: "tmp/#{Mix.env}/pipeline/ebin",
+      elixir: "~> 0.14.2",
       deps: deps ]
   end
 
   # Configuration for the OTP application
   def application do
     [
-      applications: [:cowboy, :exec, :postgrex, :ecto],
+      applications: [:phoenix, :exec, :postgrex, :ecto],
       mod: {PipelineApp, []}
     ]
   end
@@ -24,8 +22,9 @@ defmodule Pipeline.Mixfile do
       {:ecto, "~> 0.2.0"},
       {:exec, [github: "saleyn/erlexec", app: "ebin/exec.app",
         ref: "a84d95f46422163c24ffef7a123efe9b15d56253"]},
-      { :cowboy, github: "extend/cowboy" },
       { :jsex, github: "talentdeficit/jsex" },
+      {:phoenix, "0.3.0"},
+      {:cowboy, "~> 0.10.0", github: "extend/cowboy", optional: true}
     ]
   end
 end

@@ -1,8 +1,8 @@
 var frisby = require('frisby');
-var host = "http://localhost:8000";
+var host = "http://localhost:4000";
 
 frisby.create('Create a new pipeline')
-  .post(host + '/pipelines/create', {
+  .post(host + '/pipelines', {
         name: "My Frisby Pipeline"
     }, {json: true})
   .expectStatus(200)
