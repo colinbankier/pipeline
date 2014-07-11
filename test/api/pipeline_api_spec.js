@@ -7,7 +7,7 @@ frisby.create('Create a new pipeline')
     }, {json: true})
   .expectStatus(200)
   .expectHeaderContains('content-type', 'application/json')
-  .expectJSON('0', {
+  .expectJSON({
     name: "My Frisby Pipeline"
   })
 .toss();

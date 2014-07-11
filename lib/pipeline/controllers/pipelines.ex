@@ -7,6 +7,11 @@ defmodule Pipeline.Controllers.Pipelines do
 
   def create(conn, params) do
     IO.inspect params
-    json conn, %{name: "My first Pipeline"}
+    body = """
+    {"name": "#{params["name"]}"}
+    """
+    IO.puts body
+    #json conn, %{name: "My first Pipeline"}
+    json conn, body
   end
 end
