@@ -25,3 +25,27 @@ frisby.create('Create a new pipeline')
     .toss();
   })
 .toss();
+
+frisby.create('Create a new pipeline')
+  .post(host + '/pipelines', {
+        name: "My Frisby Pipeline"
+    }, {json: true})
+  .expectStatus(200)
+  .afterJSON(function(pipeline) {
+    frisby.create('Create a task')
+    .post(host + '/pipelines/' + pipeline.id + '/tasks', {
+      name: "My first task",
+      command: "echo 1"
+    }, {json: true})
+    .expectStatus(200)
+    .expectHeaderContains('content-type', 'application/json')
+    .expectJSONTypes({
+      id: Number,
+      name: String
+    })
+    .expectJSON({
+      name: "My first task"
+    })
+    .toss();
+  })
+.toss();

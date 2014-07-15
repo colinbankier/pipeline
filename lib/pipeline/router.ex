@@ -3,5 +3,7 @@ defmodule Pipeline.Router do
 
   plug Plug.Static, at: "/static", from: :pipeline
   get "/", Pipeline.Controllers.Pages, :index, as: :page
-  resources "pipelines", Pipeline.Controllers.Pipelines
+  resources "pipelines", Pipeline.Controllers.Pipelines do
+    resources "tasks", Pipeline.Controllers.Tasks
+  end
 end
