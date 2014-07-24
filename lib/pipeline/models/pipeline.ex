@@ -5,6 +5,7 @@ defmodule Pipeline.Models.Pipeline do
 
   schema "tasks" do
       field :name
+      field :command
       field :pipeline_id, :integer
   end
 

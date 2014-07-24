@@ -46,6 +46,17 @@ frisby.create('Create a new pipeline')
     .expectJSON({
       name: "My first task"
     })
+  .afterJSON(function(task) {
+    frisby.create('Get a task')
+    .get(host + '/pipelines/' + task.pipeline_id + '/tasks/' + task.id)
+    .expectStatus(200)
+    .expectHeaderContains('content-type', 'application/json')
+    .expectJSON({
+      name: "My first task",
+      command: "echo 1"
+    })
+    .toss();
+  })
     .toss();
   })
 .toss();
