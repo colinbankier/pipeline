@@ -6,24 +6,15 @@ var app = app || {};
 
 (function() {
   var PipelinePreview = app.PipelinePreview;
+  var NewPipeline = app.NewPipeline;
   app.PipelineList = React.createClass({
-    loadFromServer: function() {
-      $.ajax({
-        url: this.props.url,
-        dataType: 'json',
-        success: function(data) {
-          this.setState({pipelines: data.pipelines});
-        }.bind(this),
-        error: function(xhr, status, err) {
-          console.error(this.props.url, status, err.toString());
-        }.bind(this)
-      });
-    },
+    mixins: [FluxChildMixin, StoreWatchMixin("PipelineStore")],
     getInitialState: function() {
       return {pipelines: []};
     },
-    componentWillMount: function() {
-      this.loadFromServer();
+    getStateFromFlux: function() {
+      console.log("got state from flux.");
+      this.setState(app.Flux.store("PipelineStore").getState());
     },
     render: function() {
       var pipelineNodes = this.state.pipelines.map(function(pipeline) {
@@ -32,6 +23,9 @@ var app = app || {};
       return (
         <div className="tasks">
         { pipelineNodes }
+        <div>
+          <NewPipeline text="New pipeline"/>
+        </div>
         </div>
       );
     }

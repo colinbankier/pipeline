@@ -12,8 +12,16 @@ var app = app || {};
   var PipelineView = app.PipelineView;
   var PipelineList = app.PipelineList;
   var PipelineStatusView = app.PipelineStatusView;
+  var FluxMixin = Fluxxor.FluxMixin(React),
+    FluxChildMixin = Fluxxor.FluxChildMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
   var PipelineApp = React.createClass({
+    mixins: [FluxMixin, StoreWatchMixin("PipelineStore")],
+    getStateFromFlux: function() {
+      var flux = this.getFlux();
+      return flux.store("PipelineStore").getState();
+    },
     componentDidMount: function () {
       var setState = this.setState;
       var target = this;
@@ -37,7 +45,7 @@ var app = app || {};
     displayedElement: function() {
       switch (this.state.nowShowing) {
         case app.PIPELINE_LIST:
-          return <PipelineList url="pipelines.json"/>;
+          return <PipelineList pipelines={this.state.pipelines}/>;
         case app.DESIGN:
           return <PipelineView url="pipeline.json"/>;
         case app.STATUS:
@@ -56,7 +64,7 @@ var app = app || {};
   });
 
   React.renderComponent(
-    <PipelineApp/>,
+    <PipelineApp flux={app.Flux}/>,
     document.getElementById('content')
   );
 })();
