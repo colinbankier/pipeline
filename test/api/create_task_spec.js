@@ -6,31 +6,6 @@ frisby.create('Create a new pipeline')
         name: "My Frisby Pipeline"
     }, {json: true})
   .expectStatus(200)
-  .expectHeaderContains('content-type', 'application/json')
-  .expectJSONTypes({
-    id: Number,
-    name: String
-  })
-  .expectJSON({
-    name: "My Frisby Pipeline"
-  })
-  .afterJSON(function(pipeline) {
-    frisby.create('Get a pipeline')
-    .get(host + '/pipelines/' + pipeline.id)
-    .expectStatus(200)
-    .expectHeaderContains('content-type', 'application/json')
-    .expectJSON({
-      name: "My Frisby Pipeline"
-    })
-    .toss();
-  })
-.toss();
-
-frisby.create('Create a new pipeline')
-  .post(host + '/pipelines', {
-        name: "My Frisby Pipeline"
-    }, {json: true})
-  .expectStatus(200)
   .afterJSON(function(pipeline) {
     frisby.create('Create a task')
     .post(host + '/pipelines/' + pipeline.id + '/tasks', {

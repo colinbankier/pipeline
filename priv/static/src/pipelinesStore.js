@@ -3,7 +3,7 @@
  */
 
 var app = app || {};
-var pipelinesEndpoint = "pipelines.json";
+var pipelinesEndpoint = "pipelines";
 var FluxMixin = Fluxxor.FluxMixin(React),
     FluxChildMixin = Fluxxor.FluxChildMixin(React),
     StoreWatchMixin = Fluxxor.StoreWatchMixin;

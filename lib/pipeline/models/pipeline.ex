@@ -17,4 +17,11 @@ defmodule Pipeline.Models.Pipeline do
     Repo.one(query)
   end
 
+  def top_level_pipelines do
+    query = from p in Pipeline,
+      where: p.pipeline_id == nil
+
+    Repo.all(query)
+  end
+
 end

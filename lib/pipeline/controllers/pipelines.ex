@@ -3,7 +3,9 @@ defmodule Pipeline.Controllers.Pipelines do
   alias Pipeline.Models.Pipeline
 
   def index(conn, _params) do
-    render conn, "index"
+    pipelines = Pipeline.top_level_pipelines
+    {:ok, body} = JSEX.encode(%{pipelines: pipelines})
+    json conn, body
   end
 
   def create(conn, params) do

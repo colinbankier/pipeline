@@ -8,12 +8,11 @@ var app = app || {};
   var PipelinePreview = app.PipelinePreview;
   var NewPipeline = app.NewPipeline;
   app.PipelineList = React.createClass({
-    mixins: [FluxChildMixin, StoreWatchMixin("PipelineStore")],
+    mixins: [FluxChildMixin, StoreWatchMixin("PipelinesStore")],
     getInitialState: function() {
       return {pipelines: []};
     },
     getStateFromFlux: function() {
-      console.log("got state from flux.");
       this.setState(app.Flux.store("PipelineStore").getState());
     },
     render: function() {

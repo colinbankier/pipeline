@@ -12,9 +12,6 @@ var app = app || {};
   var PipelineView = app.PipelineView;
   var PipelineList = app.PipelineList;
   var PipelineStatusView = app.PipelineStatusView;
-  var FluxMixin = Fluxxor.FluxMixin(React),
-    FluxChildMixin = Fluxxor.FluxChildMixin(React),
-    StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
   var PipelineApp = React.createClass({
     mixins: [FluxMixin, StoreWatchMixin("PipelineStore")],
@@ -45,9 +42,9 @@ var app = app || {};
     displayedElement: function() {
       switch (this.state.nowShowing) {
         case app.PIPELINE_LIST:
-          return <PipelineList pipelines={this.state.pipelines}/>;
+          return <PipelineList />;
         case app.DESIGN:
-          return <PipelineView url="pipeline.json"/>;
+          return <PipelineView pipelineId={this.state.pipeline}/>;
         case app.STATUS:
           return <PipelineStatusView url="pipelineStatus.json"/>;
         default:
