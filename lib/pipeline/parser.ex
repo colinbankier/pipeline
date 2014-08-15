@@ -3,16 +3,24 @@ defmodule PipelineParser do
   alias Domain.Task
 
   def parse_yaml yaml do
-    IO.puts "parsing"
-    :yamerl_constr.string(String.to_char_list(yaml)) |> parse_tuples
+    :yamerl_constr.string(String.to_char_list(yaml))
+    |> parse_tuples
+    |> List.first
   end
 
   def parse_yaml_file path do
-
+    :yamerl_constr.file(String.to_char_list(path))
+    |> parse_tuples
+    |> List.first
   end
 
   def parse_tuples tuple_list do
-    Enum.map tuple_list, &convert/1
+    Enum.map tuple_list, &convert_tuple_list/1
+  end
+
+  def convert_tuple_list list do
+    type = Enum.find_value(list, &determine_type/1)
+    create_struct(type, list)
   end
 
   def convert(params) do
@@ -20,25 +28,27 @@ defmodule PipelineParser do
       to_string params
     rescue
       e in ArgumentError ->
-      IO.puts "convert command"
-      IO.inspect params
-      type = Enum.find_value(params, &determine_type/1)
-      create_struct(type, params)
+        parse_tuples params
     end
   end
 
-  def create_struct(:pipeline, params) do
-    params_map = Enum.reduce(params, %{}, fn(param, acc) ->
+  def params_to_map params do
+    Enum.reduce(params, %{}, fn(param, acc) ->
       key = param |> elem(0) |> to_string |> String.to_atom
-      value = param |> elem(1) |> parse_tuples
+      value = param |> elem(1) |> convert
       Map.put(acc, key, value)
     end
     )
-    Map.merge(%Pipeline{}, params_map)
+  end
+
+  def create_struct(:pipeline, params) do
+    map = params |> params_to_map
+    Map.merge(%Pipeline{}, map)
   end
 
   def create_struct(:task, params) do
-    %Task{name: "task"}
+    map = params |> params_to_map
+    Map.merge(%Task{}, map)
   end
 
   def determine_type({'command', _}) do

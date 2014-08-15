@@ -26,14 +26,14 @@ defmodule ParseYAMLTest do
 
   test "Parse pipeline from YAML string" do
     IO.inspect simple_pipeline
-    pipelines = PipelineParser.parse_yaml(simple_pipeline_yaml)
+    pipeline = PipelineParser.parse_yaml(simple_pipeline_yaml)
 
-    assert List.first(pipelines) == simple_pipeline
+    assert pipeline == simple_pipeline
   end
 
   test "Parse pipeline from file" do
-    yaml_path = "test/resources/simple_pipeline.yaml"
-    { :ok, pipeline } = PipelineParser.parse_yaml_file(Path.expand(yaml_path))
+    yaml_path = "test/resources/simple_pipeline.yml"
+    pipeline = PipelineParser.parse_yaml_file(Path.expand(yaml_path))
     assert pipeline == simple_pipeline
   end
 end
