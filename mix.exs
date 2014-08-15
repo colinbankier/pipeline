@@ -11,7 +11,7 @@ defmodule Pipeline.Mixfile do
   # Configuration for the OTP application
   def application do
     [
-      applications: [:phoenix, :exec, :postgrex, :ecto],
+      applications: [:phoenix, :exec, :postgrex, :ecto, :yamerl],
       mod: {PipelineApp, []}
     ]
   end
@@ -23,7 +23,9 @@ defmodule Pipeline.Mixfile do
       {:exec, [github: "saleyn/erlexec", app: "ebin/exec.app",
         ref: "a84d95f46422163c24ffef7a123efe9b15d56253"]},
       { :jsex, github: "talentdeficit/jsex" },
-      {:phoenix, "0.3.0"},
+      # {:phoenix, "0.3.0"},
+      {:phoenix, [github: "phoenixframework/phoenix", ref: "master"]},
+      {:yamerl, [github: "yakaz/yamerl"]},
       {:cowboy, "~> 0.10.0", github: "extend/cowboy", optional: true}
     ]
   end

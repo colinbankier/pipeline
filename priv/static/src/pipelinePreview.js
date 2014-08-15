@@ -10,6 +10,7 @@ var app = app || {};
       var onUpdate = this.props.onUpdate;
       var parentPath = this.props.path;
       var index = 0;
+      console.log(this.props.pipeline);
       var taskNodes = this.props.pipeline.tasks.map(function (task) {
         return <span className="taskName">{task.name}</span>;
       });

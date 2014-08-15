@@ -11,10 +11,12 @@
   "jazz": {:package, "0.1.2"},
   "jsex": {:git, "git://github.com/talentdeficit/jsex.git", "22d1348180f3ade03fe8f00be6084da9a1f673d3", []},
   "jsx": {:package, "2.0.4"},
+  "linguist": {:package, "0.1.0"},
   "mimetypes": {:git, "git://github.com/spawngrid/mimetypes.git", "47d37a977a7d633199822bf6b08353007483d00f", []},
-  "phoenix": {:package, "0.3.0"},
-  "plug": {:package, "0.5.1"},
+  "phoenix": {:git, "git://github.com/phoenixframework/phoenix.git", "b5c40a265244a6810308301df1a80f216611a76f", [ref: "master"]},
+  "plug": {:package, "0.5.2"},
   "poolboy": {:package, "1.2.1"},
   "postgrex": {:package, "0.5.2"},
   "protobuf": {:git, "git://github.com/azukiapp/elixir-protobuf.git", "88171f9cacfb5e5e94b48151784bf68b9d2023f9", [tag: "v0.0.3"]},
-  "ranch": {:git, "git://github.com/extend/ranch.git", "3189ef2d47843945efc96c224963380462c33d40", [ref: "0.10.0"]}}
+  "ranch": {:git, "git://github.com/extend/ranch.git", "3189ef2d47843945efc96c224963380462c33d40", [ref: "0.10.0"]},
+  "yamerl": {:git, "git://github.com/yakaz/yamerl.git", "a974d31325106fb4e8423e1af43e1dd9018d1218", []}}

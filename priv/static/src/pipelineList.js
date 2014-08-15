@@ -13,7 +13,7 @@ var app = app || {};
       return {pipelines: []};
     },
     getStateFromFlux: function() {
-      this.setState(app.Flux.store("PipelineStore").getState());
+      this.setState(app.Flux.store("PipelinesStore").getState());
     },
     render: function() {
       var pipelineNodes = this.state.pipelines.map(function(pipeline) {

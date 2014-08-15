@@ -13,7 +13,7 @@ var FluxMixin = Fluxxor.FluxMixin(React),
     ADD_PIPELINE: "ADD_PIPELINE"
   };
 
-  app.PipelineStore = Fluxxor.createStore({
+  app.PipelinesStore = Fluxxor.createStore({
     initialize: function() {
       this.state = {pipelines: []};
       this.bindActions(
@@ -38,7 +38,7 @@ var FluxMixin = Fluxxor.FluxMixin(React),
         dataType: 'json',
         success: function(data) {
           this.setState(data);
-          console.log("Store loaded from server");
+          console.log("Pipelines Store loaded from server");
           this.emit("change");
         }.bind(this),
         error: function(xhr, status, err) {
@@ -55,7 +55,8 @@ var FluxMixin = Fluxxor.FluxMixin(React),
   };
 
   var stores = {
-    PipelineStore: new app.PipelineStore()
+    PipelineStore: new app.PipelineStore(),
+    PipelinesStore: new app.PipelinesStore()
   };
 
   app.Flux = new Fluxxor.Flux(stores, actions);
