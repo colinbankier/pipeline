@@ -6,4 +6,6 @@ defmodule Pipeline.Router do
   resources "pipelines", Pipeline.Controllers.Pipelines do
     resources "tasks", Pipeline.Controllers.Tasks
   end
+
+  resources "source_repos", Pipeline.Controllers.SourceRepos
 end
