@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :phoenix, YourApp.Router,
+config :phoenix, Pipeline.Router,
   port: System.get_env("PORT") || 4000,
   ssl: false,
   code_reload: true,

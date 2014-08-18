@@ -11,17 +11,28 @@ defmodule Pipeline.Controllers.SourceRepos do
 
   def create(conn, params) do
     IO.inspect params
-    source_repo = %SourceRepo{name: params["name"]}
-    source_repo = Repo.insert source_repo
+    source_repo = %Pipeline.Models.SourceRepo{name: params["name"]}
+    try do
+      source_repo = Repo.insert source_repo
+      {:ok, body} = JSEX.encode source_repo
+      json conn, body
+    rescue
+      e in Postgrex.Error ->
+        {:ok, body} = JSEX.encode params
+        json conn, :bad_request, body
+    end
+  end
 
-    {:ok, body} = JSEX.encode source_repo
-    IO.inspect body
+  def destroy(conn, params) do
+    source_repo = Repo.get SourceRepo, params["id"]
+    Repo.delete source_repo
+    {:ok, body} = JSEX.encode params
     json conn, body
   end
 
   def show(conn, params) do
     # pipeline = Pipeline.find(String.to_integer(params["id"]))
     # {:ok, body} = JSEX.encode pipeline
-    json conn, "body"
+    json conn, 400, "{\"body\": 3}"
   end
 end
