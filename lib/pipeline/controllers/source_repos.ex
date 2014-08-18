@@ -1,18 +1,21 @@
 defmodule Pipeline.Controllers.SourceRepos do
   use Phoenix.Controller
+  alias Pipeline.Models.SourceRepo
 
   def index(conn, _params) do
-    # pipelines = Pipeline.top_level_pipelines
-    # {:ok, body} = JSEX.encode(%{pipelines: pipelines})
-    json conn, "body"
+    source_repos = SourceRepo.all
+    {:ok, body} = JSEX.encode(%{source_repos: source_repos})
+    IO.inspect body
+    json conn, body
   end
 
   def create(conn, params) do
     IO.inspect params
-    source_repo = %SourceRepo{path: params["path"]}
+    source_repo = %SourceRepo{name: params["name"]}
     source_repo = Repo.insert source_repo
 
     {:ok, body} = JSEX.encode source_repo
+    IO.inspect body
     json conn, body
   end
 
