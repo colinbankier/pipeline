@@ -22,10 +22,7 @@ var app = app || {};
       return (
         <div className="tasks">
         { pipelineNodes }
-        <div>
-          <NewPipeline text="New pipeline"/>
-        </div>
-        </div>
+       </div>
       );
     }
   });

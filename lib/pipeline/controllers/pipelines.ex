@@ -1,16 +1,10 @@
 defmodule Pipeline.Controllers.Pipelines do
   use Phoenix.Controller
   import Pipeline.Parser
-  alias Pipeline.Models.SourceRepo
   alias Pipeline.Models.Pipeline
 
   def index(conn, _params) do
-    pipelines = SourceRepo.all |>
-    pipeline_file_names |>
-    read_pipeline_files |>
-    filter_out_read_errors
-
-    {:ok, body} = JSEX.encode(%{pipelines: pipelines})
+    {:ok, body} = JSEX.encode(%{pipelines: list_pipelines})
     json conn, body
   end
 
@@ -24,8 +18,8 @@ defmodule Pipeline.Controllers.Pipelines do
   end
 
   def show(conn, params) do
-    pipeline = Pipeline.find(String.to_integer(params["id"]))
-    {:ok, body} = JSEX.encode pipeline
+    name = URI.decode params["id"]
+    {:ok, body} = JSEX.encode find_by_path(name)
     json conn, body
   end
 end

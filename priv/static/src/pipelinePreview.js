@@ -14,8 +14,7 @@ var app = app || {};
       var taskNodes = this.props.pipeline.tasks.map(function (task) {
         return <span className="taskName">{task.name}</span>;
       });
-      var designUrl = "#design/" + this.props.pipeline.id;
-      var statusUrl = "#status/" + this.props.pipeline.id;
+      var statusUrl = "#status/" + this.props.pipeline.name;
       return (
         <div className="pipeline">
         <a href={statusUrl}>
@@ -23,12 +22,9 @@ var app = app || {};
         {this.props.pipeline.name}
         </span>
         </a>
-        <ButtonToolbar>
-        </ButtonToolbar>
         <div className="taskList">
         {taskNodes}
         </div>
-        <a href={designUrl}>edit</a>
         </div>
       );
     }

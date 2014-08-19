@@ -1,4 +1,20 @@
 defmodule Pipeline.Parser do
+  alias Pipeline.Models.SourceRepo
+
+  def list_pipelines do
+    SourceRepo.all |>
+    pipeline_file_names |>
+    read_pipeline_files |>
+    filter_out_read_errors
+  end
+
+  def find_by_path path_string do
+    Enum.find list_pipelines, fn(pipeline) ->
+      IO.puts "Comparing #{pipeline.name} and #{path_string}"
+      pipeline.name == path_string
+    end
+  end
+
   def pipeline_file_names source_repos do
     repo_dir = "test/resources"
     Enum.map source_repos, fn(repo) ->

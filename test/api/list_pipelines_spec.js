@@ -19,3 +19,15 @@ frisby.create('List first level tasks of source repo Pipeline')
     ]
   })
   .toss();
+
+  frisby.create("Show pipeline")
+  .get(host + '/pipelines/Simple Pipeline')
+  .expectJSON({
+    name: "Simple Pipeline",
+    tasks: [
+      { name: "task 1" },
+      { name: "task 2" },
+      { name: "task 3" }
+    ]
+  })
+  .toss();
