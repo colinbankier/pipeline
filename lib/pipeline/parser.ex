@@ -3,15 +3,23 @@ defmodule PipelineParser do
   alias Domain.Task
 
   def parse_yaml yaml do
-    :yamerl_constr.string(String.to_char_list(yaml))
-    |> parse_tuples
-    |> List.first
+    try do
+      :yamerl_constr.string(String.to_char_list(yaml))
+      |> parse_tuples
+      |> List.first
+    catch
+      e -> {:error, e}
+    end
   end
 
   def parse_yaml_file path do
-    :yamerl_constr.file(String.to_char_list(path))
-    |> parse_tuples
-    |> List.first
+    try do
+      :yamerl_constr.file(String.to_char_list(path))
+      |> parse_tuples
+      |> List.first
+    catch
+      e -> {:error, e}
+    end
   end
 
   def parse_tuples tuple_list do

@@ -1,25 +1,21 @@
 var frisby = require('frisby');
 var host = "http://localhost:4000";
 
-frisby.create('Create a new pipeline')
-  .post(host + '/pipelines', {
-        name: "My Pipeline 1"
-    }, {json: true})
-  .post(host + '/pipelines', {
-        name: "My Pipeline 2"
-    }, {json: true})
-  .afterJSON(function(pipeline) {
-    frisby.create('Create nested pipeline')
-    .post(host + '/pipelines/' + pipeline.id + '/tasks', {
-          name: "Nested Pipeline",
-          type: "pipeline"
-          }, {json: true});
-  })
-  .post(host + '/pipelines', {
-        name: "My Pipeline 3"
+frisby.create('List first level tasks of source repo Pipeline')
+  .post(host + '/source_repos', {
+        name: "simple_pipeline"
     }, {json: true})
   .get(host + '/pipelines', {headers: {"content-type": ""}})
+  .inspectJSON()
   .expectJSONTypes({
       pipelines: Array
-    })
-.toss();
+  })
+  .expectJSONTypes('pipelines.?', {
+    name: "Simple Pipeline",
+    tasks: [
+      { name: "task 1" },
+      { name: "task 2" },
+      { name: "task 3" }
+    ]
+  })
+  .toss();
