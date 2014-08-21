@@ -6,4 +6,13 @@ frisby.create("Trigger a pipeline to run")
     source_repo: "simple_pipeline"
   }, {json: true})
   .expectStatus(200)
+  .expectJSONTypes({
+    id: Number
+  })
+  .afterJSON(function(job) {
+    frisby.create("Get run result")
+    .get(host + '/jobs/' + job.id)
+    .expectStatus(200)
+    .toss();
+  })
   .toss();
