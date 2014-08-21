@@ -11,7 +11,7 @@ defmodule Pipeline.Mixfile do
   # Configuration for the OTP application
   def application do
     [
-      applications: [:phoenix, :exec, :postgrex, :ecto, :yamerl],
+      applications: [:phoenix, :exec, :postgrex, :ecto, :yamerl, :elixir_talk],
       mod: {PipelineApp, []}
     ]
   end
@@ -26,6 +26,7 @@ defmodule Pipeline.Mixfile do
       # {:phoenix, "0.3.0"},
       {:phoenix, [github: "phoenixframework/phoenix", ref: "master"]},
       {:yamerl, [github: "yakaz/yamerl"]},
+      {:elixir_talk, [github: "jsvisa/elixir_talk"]},
       {:cowboy, "~> 0.10.0", github: "extend/cowboy", optional: true}
     ]
   end
