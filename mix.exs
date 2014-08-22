@@ -13,7 +13,7 @@ defmodule Pipeline.Mixfile do
   def application do
     [
       applications: [:phoenix, :exec, :postgrex, :ecto, :yamerl, :elixir_talk],
-      mod: {PipelineApp, []}
+      mod: {Pipeline, []}
     ]
   end
 
@@ -28,7 +28,7 @@ defmodule Pipeline.Mixfile do
       {:phoenix, [github: "phoenixframework/phoenix", ref: "master"]},
       {:yamerl, [github: "yakaz/yamerl"]},
       {:elixir_talk, [github: "jsvisa/elixir_talk"]},
-      {:cowboy, "~> 0.10.0", github: "extend/cowboy", optional: true}
+      {:cowboy, "~> 1.0.0", github: "extend/cowboy", optional: true, override: true}
     ]
   end
 end
