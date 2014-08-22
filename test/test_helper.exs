@@ -1,3 +1,4 @@
+Phoenix.CodeReloader.reload!
 ExUnit.start
 
 defmodule Pipeline.TestCase do

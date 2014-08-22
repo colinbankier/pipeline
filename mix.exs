@@ -4,7 +4,8 @@ defmodule Pipeline.Mixfile do
   def project do
     [ app: :pipeline,
       version: "0.0.1",
-      elixir: "~> 0.14.2",
+      elixir: "~> 0.15.1",
+      elixirc_paths: ["lib", "web"],
       deps: deps ]
   end
 

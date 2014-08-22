@@ -1,14 +1,17 @@
-defmodule PipelineApp do
+defmodule Pipeline do
   use Application
 
-  # See http://elixir-lang.org/docs/stable/Application.Behaviour.html
+  # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
-    IO.puts "App start"
-    PipelineApp.Supervisor.start_link
-  end
+    import Supervisor.Spec, warn: false
 
-  def default_working_dir do
-    Path.join(System.get_env("HOME"), ".pipeline")
+    children = [
+      # Define workers and child supervisors to be supervised
+      # worker(TestApp.Worker, [arg1, arg2, arg3])]
+    ]
+
+    opts = [strategy: :one_for_one, name: Pipeline.Supervisor]
+    Supervisor.start_link(children, opts)
   end
 end
