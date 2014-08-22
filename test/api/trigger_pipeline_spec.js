@@ -13,6 +13,7 @@ frisby.create("Trigger a pipeline to run")
     frisby.create("Get run result")
     .get(host + '/jobs/' + job.id)
     .expectStatus(200)
+    .inspectJSON()
     .toss();
   })
   .toss();
