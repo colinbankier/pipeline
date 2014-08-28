@@ -3,6 +3,7 @@ defmodule Models.Job do
 
   schema "jobs" do
     field :name
+    field :pipeline_json
     field(:path, {:array, :string})
     field :build_number, :integer
     field :run_number, :integer

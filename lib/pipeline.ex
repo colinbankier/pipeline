@@ -9,7 +9,8 @@ defmodule Pipeline do
     children = [
       # Define workers and child supervisors to be supervised
       # worker(TestApp.Worker, [arg1, arg2, arg3])
-      worker(Repo, [])
+      worker(Repo, []),
+      worker(Worker, [])
     ]
 
     opts = [strategy: :one_for_one, name: Pipeline.Supervisor]

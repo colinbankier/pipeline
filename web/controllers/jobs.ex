@@ -11,11 +11,24 @@ defmodule Pipeline.Controllers.Jobs do
     Repo.insert |>
     JSEX.encode
 
+    schedule_job body
     json conn, body
   end
 
+  def schedule_job job_json do
+    {:ok, pid} = ElixirTalk.connect()
+    ElixirTalk.put(pid, job_json)
+  end
+
   def create_job task do
-    %Job{path: [task.name], build_number: next_build_number, run_number: 1}
+    {:ok, pipeline_json} = JSEX.encode task
+    %Job{
+      path: [task.name],
+      status: "scheduled",
+      build_number: next_build_number,
+      run_number: 1,
+      pipeline_json: pipeline_json
+    }
   end
 
   def next_build_number do
