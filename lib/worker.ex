@@ -1,5 +1,6 @@
 defmodule Worker do
   use GenServer
+  alias Models.Job
 
   def start_link() do
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
@@ -15,10 +16,20 @@ defmodule Worker do
 
   def read_job_queue do
     {:ok, pid} = ElixirTalk.connect()
-    {:reserved, id, json} = ElixirTalk.reserve(pid)
-    IO.inspect json
+    {:reserved, id, {job_id, json}} = ElixirTalk.reserve(pid)
+    IO.inspect parse_job(json)
     deleted = ElixirTalk.delete(pid, id)
-    IO.inspect deleted
     read_job_queue
+  end
+
+  def parse_job json do
+    {:ok, map} = JSEX.decode json
+    %Job{
+      path: map["path"],
+      status: map["status"],
+      build_number: map["build_number"],
+      run_number: map["run_number"],
+      pipeline_json: map["pipeline_json"]
+    }
   end
 end
