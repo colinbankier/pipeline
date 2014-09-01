@@ -16,20 +16,10 @@ defmodule Worker do
 
   def read_job_queue do
     {:ok, pid} = ElixirTalk.connect()
-    {:reserved, id, {job_id, json}} = ElixirTalk.reserve(pid)
-    IO.inspect parse_job(json)
+    {:reserved, id, {beanstalk_id, job_id}} = ElixirTalk.reserve(pid)
+    TaskRunner.run job_id
     deleted = ElixirTalk.delete(pid, id)
-    read_job_queue
-  end
 
-  def parse_job json do
-    {:ok, map} = JSEX.decode json
-    %Job{
-      path: map["path"],
-      status: map["status"],
-      build_number: map["build_number"],
-      run_number: map["run_number"],
-      pipeline_json: map["pipeline_json"]
-    }
+    read_job_queue
   end
 end

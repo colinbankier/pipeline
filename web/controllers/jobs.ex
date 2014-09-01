@@ -9,15 +9,16 @@ defmodule Pipeline.Controllers.Jobs do
     Parser.find_by_path |>
     create_job |>
     Repo.insert |>
+    schedule_job |>
     JSEX.encode
 
-    schedule_job body
     json conn, body
   end
 
-  def schedule_job job_json do
+  def schedule_job job do
     {:ok, pid} = ElixirTalk.connect()
-    ElixirTalk.put(pid, job_json)
+    ElixirTalk.put(pid, job.id)
+    job
   end
 
   def create_job task do

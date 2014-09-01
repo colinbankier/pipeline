@@ -1,10 +1,8 @@
-Phoenix.CodeReloader.reload!
 ExUnit.start
 
 defmodule Pipeline.TestCase do
   use ExUnit.CaseTemplate
 
-  # Enable code reloading on test cases
   setup do
     :ok
   end
@@ -12,8 +10,20 @@ end
 
 defmodule Pipeline.TestHelper do
   alias Pipeline.Models.Pipeline, as: DbPipeline
+  alias Models.Job
   alias Domain.Pipeline
   alias Domain.Task
+
+  def create_job pipeline_json, path do
+    job = %Job{
+      path: path,
+      status: "scheduled",
+      build_number: Job.next_build_number,
+      run_number: 1,
+      pipeline_json: pipeline_json
+    } |>
+    Repo.insert
+  end
 
   def simple_pipeline_json do
      """
