@@ -9,6 +9,6 @@ defmodule TaskRunnerTest do
     run_job = TaskRunner.run job.id
 
     assert run_job.status == "success"
-    assert run_job.output == "1"
+    assert run_job.output == "1\n"
   end
 end

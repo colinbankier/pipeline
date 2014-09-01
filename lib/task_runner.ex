@@ -3,11 +3,13 @@ defmodule TaskRunner do
   alias Domain.Pipeline
 
   def run job_id do
-    job = Repo.get(Job, job_id)
+    Repo.get(Job, job_id) |> initialise_job |> _run
+  end
+
+  def initialise_job job do
     job = %{job | status: "running", output: ""}
     :ok = Repo.update(job)
-    # spawn(__MODULE__, :_run, [job])
-    _run job
+    job
   end
 
   def listen job do
@@ -15,7 +17,6 @@ defmodule TaskRunner do
       msg ->
         process_message job, msg
     end
-    job
   end
 
   def _run job do
@@ -25,7 +26,6 @@ defmodule TaskRunner do
     :exec.run(String.to_char_list(task.command), [:stdout, :stderr, :monitor,
       {:cd, String.to_char_list(working_dir)}])
     listen job
-    job
   end
 
   def process_message job, {:EXIT, pid, status} do
@@ -37,8 +37,6 @@ defmodule TaskRunner do
   end
 
   def handle_exit job, pid, status do
-    IO.puts "handle exit"
-    IO.inspect job
     get_exec_status = fn
       {:exit_status, exec_status} -> exec_status
       :normal -> 0
@@ -58,8 +56,6 @@ defmodule TaskRunner do
   end
 
   def process_message job, {source, ospid, output} do
-    IO.puts "Got output"
-    IO.puts output
     job = %{ job | output: job.output <> output}
     listen job
   end
