@@ -6,6 +6,23 @@ defmodule Domain do
   defmodule Pipeline do
     defstruct type: :pipeline, id: nil, name: nil, tasks: []
 
+  def find_runnable_task(path, pipeline) do
+    find(path, pipeline) |> first_runnable_task
+  end
+
+  def first_runnable_task(pipeline = %Pipeline{}) do
+    pipeline.tasks |> List.first
+  end
+
+  def first_runnable_task(task = %Task{}) do
+    task
+  end
+
+  def find_task(path, pipeline = %Pipeline{}) do
+    task = pipeline.tasks |> List.first
+    find_task([pipeline.name | path], task)
+  end
+
     def find([ head | [] ], pipeline) do
       if head == pipeline.name do
         pipeline

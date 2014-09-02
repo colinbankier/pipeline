@@ -22,7 +22,7 @@ defmodule TaskRunner do
   def _run job do
     working_dir = "/"
     {:ok, pipeline} = Pipeline.from_json job.pipeline_json
-    task = Pipeline.find(job.path, pipeline)
+    task = Pipeline.find_runnable_task(job.path, pipeline)
     :exec.run(String.to_char_list(task.command), [:stdout, :stderr, :monitor,
       {:cd, String.to_char_list(working_dir)}])
     listen job

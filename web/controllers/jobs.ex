@@ -17,7 +17,7 @@ defmodule Pipeline.Controllers.Jobs do
 
   def schedule_job job do
     {:ok, pid} = ElixirTalk.connect()
-    ElixirTalk.put(pid, job.id)
+    ElixirTalk.put(pid, to_string(job.id))
     job
   end
 
