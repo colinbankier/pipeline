@@ -3,6 +3,7 @@ defmodule Pipeline.Controllers.Jobs do
   import Ecto.Query
   alias Models.Job
   alias Pipeline.Parser
+  alias Domain.Pipeline
 
   def create(conn, params) do
     {:ok, body} = params["source_repo"] |>
@@ -22,9 +23,12 @@ defmodule Pipeline.Controllers.Jobs do
   end
 
   def create_job task do
+    path = [task.name]
+    subtask_path = Pipeline.find_sub_task path, task
+
     {:ok, pipeline_json} = JSEX.encode task
     %Job{
-      path: [task.name],
+      path: subtask_path,
       status: "scheduled",
       build_number: next_build_number,
       run_number: 1,

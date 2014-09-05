@@ -6,16 +6,35 @@ defmodule Domain do
   defmodule Pipeline do
     defstruct type: :pipeline, id: nil, name: nil, tasks: []
 
-  def find_runnable_task(path, pipeline) do
-    find(path, pipeline) |> first_runnable_task
+  def find_sub_task(path, %Task{}) do
+    path
   end
 
-  def first_runnable_task(pipeline = %Pipeline{}) do
-    pipeline.tasks |> List.first
+  def find_sub_task(path, pipeline = %Pipeline{}) do
+    task = pipeline.tasks |> List.first
+    subtask_path = List.insert_at(path, -1, task.name)
+
+    find_sub_task(subtask_path, task)
   end
 
-  def first_runnable_task(task = %Task{}) do
-    task
+  def find_next_task [ head ], pipeline do
+    nil
+  end
+
+  def find_next_task path, pipeline do
+    [ head | tail ] = path |> Enum.reverse
+    parent_path = Enum.reverse(tail)
+    parent = find(parent_path, pipeline)
+    index = Enum.find_index parent.tasks, fn task ->
+      task.name == head
+    end
+    if index + 1 >= Enum.count(parent.tasks) do
+      find_next_task(parent_path, pipeline)
+    else
+      task = Enum.at(parent.tasks, index + 1)
+      reversed_path = [task.name | tail]
+      reversed_path |> Enum.reverse
+    end
   end
 
   def find_task(path, pipeline = %Pipeline{}) do

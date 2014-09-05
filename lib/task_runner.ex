@@ -22,10 +22,16 @@ defmodule TaskRunner do
   def _run job do
     working_dir = "/"
     {:ok, pipeline} = Pipeline.from_json job.pipeline_json
-    task = Pipeline.find_runnable_task(job.path, pipeline)
+    job.path |> Pipeline.find(pipeline) |> _exec(working_dir)
+    listen job
+  end
+
+  def _exec task = %Task{}, working_dir do
     :exec.run(String.to_char_list(task.command), [:stdout, :stderr, :monitor,
       {:cd, String.to_char_list(working_dir)}])
-    listen job
+  end
+  
+  def _exec _, _ do
   end
 
   def process_message job, {:EXIT, pid, status} do

@@ -44,4 +44,11 @@ defmodule FindTaskTest do
 
     assert task.name == "task 2a"
   end
+
+  test "Find runnable subtask of a pipeline" do
+    path = ["Simple Pipeline"]
+    subtask_path = Pipeline.find_sub_task path, simple_pipeline
+
+    assert subtask_path == ["Simple Pipeline", "task 1"]
+  end
 end

@@ -2,8 +2,7 @@ import Pipeline.TestHelper
 
 defmodule ParseYAMLTest do
   use ExUnit.Case
-  alias Models.Task
-  alias Models.Pipeline
+  alias Pipeline.Parser
 
   def simple_pipeline_yaml do
      """
@@ -26,14 +25,14 @@ defmodule ParseYAMLTest do
 
   test "Parse pipeline from YAML string" do
     IO.inspect simple_pipeline
-    pipeline = PipelineParser.parse_yaml(simple_pipeline_yaml)
+    pipeline = Parser.parse_yaml(simple_pipeline_yaml)
 
     assert pipeline == simple_pipeline
   end
 
   test "Parse pipeline from file" do
-    yaml_path = "test/resources/simple_pipeline.yml"
-    pipeline = PipelineParser.parse_yaml_file(Path.expand(yaml_path))
+    yaml_path = "test/resources/simple_pipeline/pipeline.yml"
+    pipeline = Parser.parse_yaml_file(Path.expand(yaml_path))
     assert pipeline == simple_pipeline
   end
 end

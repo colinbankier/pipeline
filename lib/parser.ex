@@ -35,6 +35,10 @@ defmodule Pipeline.Parser do
     Yamex.parse_yaml_file file_path
   end
 
+  def parse_yaml yaml do
+    Yamex.parse_yaml yaml
+  end
+
   def filter_out_read_errors pipelines do
     Enum.filter pipelines, fn(config_map) ->
       try do
