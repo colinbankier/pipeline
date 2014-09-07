@@ -1,6 +1,7 @@
 defmodule TaskRunner do
   alias Models.Job
   alias Domain.Pipeline
+  alias Domain.Task
 
   def run job_id do
     Repo.get(Job, job_id) |> initialise_job |> _run
@@ -22,16 +23,20 @@ defmodule TaskRunner do
   def _run job do
     working_dir = "/"
     {:ok, pipeline} = Pipeline.from_json job.pipeline_json
-    job.path |> Pipeline.find(pipeline) |> _exec(working_dir)
+    job.path |> Pipeline.find(pipeline) |> _exec(job, working_dir)
+  end
+
+  def _exec task = %Task{}, job, working_dir do
+    :exec.run(String.to_char_list(task.command), [:stdout, :stderr, :monitor,
+      {:cd, String.to_char_list(working_dir)}])
     listen job
   end
 
-  def _exec task = %Task{}, working_dir do
-    :exec.run(String.to_char_list(task.command), [:stdout, :stderr, :monitor,
-      {:cd, String.to_char_list(working_dir)}])
-  end
-  
-  def _exec _, _ do
+  def _exec _, job , _ do
+    msg = "You cannot execute something that is not a Task."
+    job = %{job | status: "failure", output: msg}
+    :ok = Repo.update(job)
+    :ignoring
   end
 
   def process_message job, {:EXIT, pid, status} do
