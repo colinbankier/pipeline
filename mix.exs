@@ -28,7 +28,8 @@ defmodule Pipeline.Mixfile do
       {:phoenix, [github: "phoenixframework/phoenix", ref: "master"]},
       {:yamerl, [github: "yakaz/yamerl"]},
       {:elixir_talk, [github: "jsvisa/elixir_talk"]},
-      {:cowboy, "~> 1.0.0", github: "extend/cowboy", optional: true, override: true}
+      {:cowboy, "~> 1.0.0", github: "extend/cowboy", optional: true, override: true},
+      {:httpoison, "~> 0.4"}
     ]
   end
 end

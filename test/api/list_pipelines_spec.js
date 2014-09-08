@@ -16,7 +16,6 @@ frisby.create('List first level tasks of source repo Pipeline')
   ]
 })
 .after(function() {
-
   frisby.create("Show pipeline")
   .get(host + '/pipelines/simple_pipeline')
   .inspectJSON()
