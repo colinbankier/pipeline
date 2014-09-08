@@ -5,6 +5,7 @@ frisby.create('Create a source repo')
 .post(host + '/source_repos', {
   name: 'my_new_repo'
 }, {json: true})
+.inspectJSON()
 .expectStatus(200)
 .expectHeaderContains('content-type', 'application/json')
 .afterJSON(function(source_repo) {
