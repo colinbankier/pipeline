@@ -34,10 +34,10 @@ defmodule RunPipelineTest do
     tasks_complete = Enum.reduce tasks, true, fn(task, acc) ->
       acc && successful(task)
     end
-    pipeline.status == "success" && tasks_complete
+    pipeline["status"] == "success" && tasks_complete
   end
 
   def successful(task = %{"command" => _}) do
-    task.status == "success"
+    task["status"] == "success"
   end
 end
