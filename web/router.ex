@@ -9,4 +9,5 @@ defmodule Pipeline.Router do
 
   resources "source_repos", Pipeline.Controllers.SourceRepos
   resources "jobs", Pipeline.Controllers.Jobs
+  resources "status", Pipeline.Controllers.Status
 end
