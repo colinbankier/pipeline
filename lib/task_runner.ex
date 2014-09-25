@@ -8,6 +8,7 @@ defmodule TaskRunner do
   end
 
   def initialise_job job do
+    IO.puts "Init job run #{job.name}: #{job.path}"
     job = %{job | status: "running", output: ""}
     :ok = Repo.update(job)
     job
@@ -23,10 +24,22 @@ defmodule TaskRunner do
   def _run job do
     working_dir = "/"
     {:ok, pipeline} = Pipeline.from_json job.pipeline_json
-    job.path |> Pipeline.find(pipeline) |> _exec(job, working_dir)
+    completed_job = job.path |> Pipeline.find(pipeline) |> _exec(job, working_dir)
+    trigger_next completed_job, pipeline
+  end
+
+  def trigger_next(job, pipeline) do
+    if job.status == "success" do
+      next_path = Pipeline.find_next_task job.path, pipeline
+      IO.puts "trigger next #{next_path}"
+      TaskScheduler.trigger_task(pipeline, next_path)
+    else
+      IO.puts "skipping trigger"
+    end
   end
 
   def _exec task = %Task{}, job, working_dir do
+    IO.puts "exec #{task.name}"
     :exec.run(String.to_char_list(task.command), [:stdout, :stderr, :monitor,
       {:cd, String.to_char_list(working_dir)}])
     listen job

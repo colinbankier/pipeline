@@ -11,7 +11,6 @@ defmodule Pipeline.Controllers.Status do
     Parser.find_by_path |>
     fetch_job_results([]) |>
     JSEX.encode
-    IO.puts body
     json conn, body
   end
 
@@ -30,6 +29,14 @@ defmodule Pipeline.Controllers.Status do
       order_by: [desc: j.build_number],
       limit: 1
     job = Repo.one(query)
+    set_status task, job
+  end
+
+  def set_status task, nil do
+    Map.put task, :status, ""
+  end
+
+  def set_status task, job do
     Map.put task, :status, job.status
   end
 
