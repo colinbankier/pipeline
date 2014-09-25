@@ -6,15 +6,20 @@ defmodule Domain do
   defmodule Pipeline do
     defstruct type: :pipeline, id: nil, name: nil, tasks: []
 
-  def find_sub_task(path, %Task{}) do
+  def find_sub_task(path, pipeline) do
+    task = find path, pipeline
+    _find_sub_task(path, task)
+  end
+
+  def _find_sub_task(path, %Task{}) do
     path
   end
 
-  def find_sub_task(path, pipeline = %Pipeline{}) do
+  def _find_sub_task(path, pipeline = %Pipeline{}) do
     task = pipeline.tasks |> List.first
     subtask_path = List.insert_at(path, -1, task.name)
 
-    find_sub_task(subtask_path, task)
+    _find_sub_task(subtask_path, task)
   end
 
   def find_next_task [ head ], pipeline do
