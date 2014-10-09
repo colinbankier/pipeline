@@ -17,12 +17,26 @@ defmodule TaskRunnerTest do
   end
 
   test "Running a pipeline directly fails gracefully" do
-    job = create_job(simple_pipeline_json, ["Simple Pipeline"])
-
-    TaskRunner.run job.id
-    job = Repo.get(Job, job.id)
+    job = run_job(simple_pipeline_json, ["Simple Pipeline"])
 
     assert job.status == "failure"
     assert job.output == "You cannot execute something that is not a Task."
+  end
+
+  test "result has ok status if exit status 0" do
+    command = "exit 0"
+    pipe = %Pipeline{name: "Successful Pipeline", tasks:
+      [ %Task{name: "Task 1", command: command} ]
+      }
+    expected_result = %PipelineResult{id: 1, name: "Successful Pipeline",
+    status: :ok,
+    tasks: [
+      %TaskResult{name: "Task 1", status: :ok,
+      output: ""},
+      ]
+    }
+
+    {:ok, build_number} = pipe |> PipelineRunner.run
+    assert poll_until_complete(pipe, build_number) == expected_result
   end
 end

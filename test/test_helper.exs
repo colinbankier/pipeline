@@ -25,6 +25,12 @@ defmodule Pipeline.TestHelper do
     Repo.insert
   end
 
+  def run_task pipeline_json, path do
+    job = create_job(simple_pipeline_json, path)
+    TaskRunner.run job.id
+    Repo.get(Job, job.id)
+  end
+
   def simple_pipeline_json do
      """
     { "name": "Simple Pipeline",
