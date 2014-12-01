@@ -10,7 +10,7 @@ defmodule Pipeline.Controllers.Status do
     {:ok, body} = params["id"] |>
     Parser.find_by_path |>
     fetch_job_results([]) |>
-    JSEX.encode
+    JSX.encode
     json conn, body
   end
 

@@ -11,7 +11,7 @@ defmodule Pipeline.Controllers.Tasks do
       pipeline_id: pipeline_id
     }
     task = Repo.insert task
-    {:ok, body} = JSEX.encode task
+    {:ok, body} = JSX.encode task
 
     json conn, body
   end
@@ -19,7 +19,7 @@ defmodule Pipeline.Controllers.Tasks do
   def show(conn, params) do
     IO.inspect params
     task = Pipeline.find(String.to_integer(params["id"]))
-    {:ok, body} = JSEX.encode task
+    {:ok, body} = JSX.encode task
     json conn, body
   end
 end

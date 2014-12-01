@@ -68,7 +68,7 @@ defmodule Domain do
     end
 
   def from_json json do
-    {:ok, data} = JSEX.decode json
+    {:ok, data} = JSX.decode json
     pipeline = convert data
     {:ok, pipeline}
   end

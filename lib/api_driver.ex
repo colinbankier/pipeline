@@ -7,12 +7,12 @@ defmodule Pipeline.ApiDriver do
 
   def process_response_body(body) do
     IO.inspect body
-    JSEX.decode! body
+    JSX.decode! body
   end
 
   def process_request_body(body) do
     IO.inspect body
-    json = JSEX.encode! body
+    json = JSX.encode! body
     IO.inspect json
     json
   end

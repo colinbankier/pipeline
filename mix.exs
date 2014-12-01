@@ -4,7 +4,7 @@ defmodule Pipeline.Mixfile do
   def project do
     [ app: :pipeline,
       version: "0.0.1",
-      elixir: "~> 0.15.1",
+      elixir: "~> 1.0.0",
       elixirc_paths: ["lib", "web"],
       deps: deps ]
   end
@@ -23,12 +23,12 @@ defmodule Pipeline.Mixfile do
       {:ecto, "~> 0.2.0"},
       {:exec, [github: "saleyn/erlexec", app: "ebin/exec.app",
         ref: "a84d95f46422163c24ffef7a123efe9b15d56253"]},
-      { :jsex, github: "talentdeficit/jsex" },
+      { :exjsx, github: "talentdeficit/jsex" },
       # {:phoenix, "0.3.0"},
       {:phoenix, [github: "phoenixframework/phoenix", ref: "master"]},
       {:yamerl, [github: "yakaz/yamerl"]},
       {:elixir_talk, [github: "jsvisa/elixir_talk"]},
-      {:cowboy, "~> 1.0.0", github: "extend/cowboy", optional: true, override: true},
+      {:cowboy, "2.0.0-pre.1", github: "extend/cowboy", optional: true, override: true},
       {:httpoison, "~> 0.4"}
     ]
   end

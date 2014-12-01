@@ -7,14 +7,14 @@ defmodule Pipeline.Controllers.Jobs do
     {:ok, body} = params["source_repo"] |>
     Parser.find_by_path |>
     TaskScheduler.trigger_task([]) |>
-    JSEX.encode
+    JSX.encode
 
     json conn, body
   end
 
   def show(conn, params) do
     {:ok, body} = Repo.get(Job, params["id"]) |>
-    JSEX.encode
+    JSX.encode
 
     json conn, body
   end

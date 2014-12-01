@@ -26,7 +26,7 @@ defmodule BuildNumber do
   end
 
   def decode {:ok, json} do
-    JSEX.decode! json
+    JSX.decode! json
   end
 
   def get_key map, key do
@@ -42,7 +42,7 @@ defmodule BuildNumber do
   def store_next int, key do
     IO.puts "store"
     new_dict = read_db |> Dict.put key, int
-    {:ok, json} = JSEX.encode(new_dict)
+    {:ok, json} = JSX.encode(new_dict)
     IO.puts json
     File.write! @db_path, json |>
     IO.inspect

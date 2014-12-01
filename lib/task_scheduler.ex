@@ -26,7 +26,7 @@ defmodule TaskScheduler do
     subtask_path = Pipeline.find_sub_task path, pipeline
     IO.puts "Creating job #{subtask_path}"
 
-    {:ok, pipeline_json} = JSEX.encode pipeline
+    {:ok, pipeline_json} = JSX.encode pipeline
     %Job{
       path: subtask_path,
       status: "scheduled",

@@ -9,7 +9,7 @@ defmodule PipelineParser do
   end
 
   def parse(json) do
-    {:ok, data} = JSEX.decode json
+    {:ok, data} = JSX.decode json
     pipeline = convert data
     {:ok, pipeline}
   end
