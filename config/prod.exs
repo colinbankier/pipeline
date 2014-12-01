@@ -14,7 +14,7 @@ use Mix.Config
 config :phoenix, Pipeline.Router,
   url: [host: "example.com"],
   http: [port: System.get_env("PORT")],
-  secret_key_base: "204T5O49W4yhh2aDb9WjCiKA8GvGCU1taoSZaXP8i+CbnGqvZPDyNehy3c+/ENhwqHEnt4WL3pS9rq04UVFMrQ=="
+  secret_key_base: "wfc6NElQzNY3KVYbU659h7wn+JKKPOOVSfukzLRAvO/lbD5TeJ0kkskyrPes4l0MgimrN9ayPoIM1b4ShMK8nA=="
 
 config :logger,
   level: :info
