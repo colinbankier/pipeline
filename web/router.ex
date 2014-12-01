@@ -1,4 +1,4 @@
-defmodule Pipline.Router do
+defmodule Pipeline.Router do
   use Phoenix.Router
 
   pipeline :browser do
@@ -11,7 +11,7 @@ defmodule Pipline.Router do
     plug :accepts, ~w(json)
   end
 
-  scope "/", Pipline do
+  scope "/", Pipeline do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
@@ -21,7 +21,7 @@ defmodule Pipline.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Pipline do
+  # scope "/api", Pipeline do
   #   pipe_through :api
   # end
 end
