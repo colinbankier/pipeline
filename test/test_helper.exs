@@ -1,3 +1,4 @@
+Pipline.Router.start
 ExUnit.start
 
 defmodule Pipeline.TestCase do

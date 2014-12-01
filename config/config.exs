@@ -1,25 +1,28 @@
 # This file is responsible for configuring your application
+# and its dependencies with the aid of the Mix.Config module.
+#
+# This configuration file is loaded before any dependency and
+# is restricted to this project.
 use Mix.Config
 
-# Note this file is loaded before any dependency and is restricted
-# to this project. If another project depends on this project, this
-# file won't be loaded nor affect the parent project.
+# Configures the router
+config :phoenix, Pipline.Router,
+  url: [host: "localhost"],
+  http: [port: System.get_env("PORT")],
+  secret_key_base: "hwpOvddiAaZvIhvdxNICgLRm6F0lQhD3Zr3HGK3LhPrOVY5VDOuuGJeIhMRu/WbQUz/lGMvQki4M7+P/JiLzLQ==",
+  debug_errors: false,
+  error_controller: Pipline.PageController
 
-config :phoenix, Pipeline.Router,
-  port: System.get_env("PORT"),
-  ssl: false,
-  static_assets: true,
-  cookies: true,
-  session_key: "_pipeline_key",
-  session_secret: "H9UID65N351$18_HK3W54(7SL4Z$Y7+=1PBFC0D0@9XK%P3@*S4O)NVJ72YF(7DY#%E"
+# Session configuration
+config :phoenix, Pipline.Router,
+  session: [store: :cookie,
+            key: "_pipline_key"]
 
-config :phoenix, :code_reloader,
-  enabled: false
-
+# Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-# Import environment specific config. Note, this must remain at the bottom of
-# this file to properly merge your previous config entries.
+# Import environment specific config. This must remain at the bottom
+# of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

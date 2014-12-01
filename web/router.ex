@@ -1,16 +1,27 @@
-defmodule Pipeline.Router do
+defmodule Pipline.Router do
   use Phoenix.Router
 
-  pipeline :static do
+  pipeline :browser do
+    plug :accepts, ~w(html)
+    plug :fetch_session
     plug Plug.Static, at: "/", from: :pipeline
   end
 
-  get "/", Pipeline.Controllers.Pages, :index, as: :page
-  resources "pipelines", Pipeline.Controllers.Pipelines do
-    resources "tasks", Pipeline.Controllers.Tasks
+  pipeline :api do
+    plug :accepts, ~w(json)
   end
 
-  resources "source_repos", Pipeline.Controllers.SourceRepos
-  resources "jobs", Pipeline.Controllers.Jobs
-  resources "status", Pipeline.Controllers.Status
+  scope "/", Pipline do
+    pipe_through :browser # Use the default browser stack
+
+    get "/", PageController, :index
+    resources "pipelines", Pipeline.Controllers.Pipelines do
+     resources "tasks", Pipeline.Controllers.Tasks
+    end
+  end
+
+  # Other scopes may use custom stacks.
+  # scope "/api", Pipline do
+  #   pipe_through :api
+  # end
 end
