@@ -6,13 +6,14 @@ defmodule Pipeline.Mixfile do
       version: "0.0.1",
       elixir: "~> 1.0.0",
       elixirc_paths: ["lib", "web"],
+      compilers: [:phoenix] ++ Mix.compilers,
       deps: deps ]
   end
 
   # Configuration for the OTP application
   def application do
     [
-      applications: [:phoenix, :exec, :postgrex, :ecto, :yamerl, :elixir_talk],
+      applications: [:phoenix, :cowboy, :logger, :exec, :postgrex, :ecto, :yamerl, :elixir_talk],
       mod: {Pipeline, []}
     ]
   end
@@ -27,7 +28,7 @@ defmodule Pipeline.Mixfile do
       {:phoenix, [github: "phoenixframework/phoenix", ref: "v0.6.1"]},
       {:yamerl, [github: "yakaz/yamerl"]},
       {:elixir_talk, [github: "jsvisa/elixir_talk"]},
-      {:cowboy, "2.0.0-pre.1", github: "extend/cowboy", optional: true, override: true},
+      {:cowboy, "~> 1.0", github: "extend/cowboy", optional: true, override: true},
       {:httpoison, "~> 0.4"}
     ]
   end
