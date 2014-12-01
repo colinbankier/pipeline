@@ -1,3 +1,3 @@
-defmodule Pipline.PageView do
-  use Pipline.View
+defmodule Pipeline.PageView do
+  use Pipeline.View
 end

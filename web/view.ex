@@ -1,4 +1,4 @@
-defmodule Pipline.View do
+defmodule Pipeline.View do
   use Phoenix.View, root: "web/templates"
 
   # The quoted expression returned by this block is applied
@@ -6,8 +6,8 @@ defmodule Pipline.View do
   using do
     quote do
       # Import common functionality
-      import Pipline.I18n
-      import Pipline.Router.Helpers
+      import Pipeline.I18n
+      import Pipeline.Router.Helpers
 
       # Use Phoenix.HTML to import all HTML functions (forms, tags, etc)
       use Phoenix.HTML

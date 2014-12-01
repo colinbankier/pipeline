@@ -8,11 +8,13 @@ defmodule Pipeline do
 
     children = [
       # Define workers and child supervisors to be supervised
-      # worker(TestApp.Worker, [arg1, arg2, arg3])
+      # worker(Pipeline.Worker, [arg1, arg2, arg3])
       worker(Repo, []),
       worker(Worker, [])
     ]
 
+    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
+    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Pipeline.Supervisor]
     Supervisor.start_link(children, opts)
   end

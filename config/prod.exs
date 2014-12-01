@@ -11,10 +11,10 @@ use Mix.Config
 # Where those two env variables point to a file on
 # disk for the key and cert.
 
-config :phoenix, Pipline.Router,
+config :phoenix, Pipeline.Router,
   url: [host: "example.com"],
   http: [port: System.get_env("PORT")],
-  secret_key_base: "hwpOvddiAaZvIhvdxNICgLRm6F0lQhD3Zr3HGK3LhPrOVY5VDOuuGJeIhMRu/WbQUz/lGMvQki4M7+P/JiLzLQ=="
+  secret_key_base: "204T5O49W4yhh2aDb9WjCiKA8GvGCU1taoSZaXP8i+CbnGqvZPDyNehy3c+/ENhwqHEnt4WL3pS9rq04UVFMrQ=="
 
 config :logger,
   level: :info

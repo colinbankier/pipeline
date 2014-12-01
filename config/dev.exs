@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :phoenix, Pipline.Router,
+config :phoenix, Pipeline.Router,
   http: [port: System.get_env("PORT") || 4000],
   debug_errors: true
 

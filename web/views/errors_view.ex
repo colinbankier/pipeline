@@ -1,5 +1,5 @@
-defmodule Pipline.ErrorsView do
-  use Pipline.View
+defmodule Pipeline.ErrorsView do
+  use Pipeline.View
 
   def render("404.html", _assigns) do
     "Page not found - 404"

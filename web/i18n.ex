@@ -1,4 +1,4 @@
-defmodule Pipline.I18n do
+defmodule Pipeline.I18n do
   use Linguist.Vocabulary
 
   locale "en", Path.join([__DIR__, "../config/locales/en.exs"])

@@ -1,3 +1,3 @@
-defmodule Pipline.LayoutView do
-  use Pipline.View
+defmodule Pipeline.LayoutView do
+  use Pipeline.View
 end

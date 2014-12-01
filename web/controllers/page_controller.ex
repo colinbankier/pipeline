@@ -1,4 +1,4 @@
-defmodule Pipline.PageController do
+defmodule Pipeline.PageController do
   use Phoenix.Controller
 
   plug :action
