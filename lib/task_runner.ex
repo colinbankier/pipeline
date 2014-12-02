@@ -49,7 +49,7 @@ defmodule TaskRunner do
     msg = "You cannot execute something that is not a Task."
     job = %{job | status: "failure", output: msg}
     :ok = Repo.update(job)
-    :ignoring
+    job
   end
 
   def process_message job, {:EXIT, pid, status} do

@@ -17,6 +17,14 @@ defmodule Models.Job do
       order_by: [desc: j.build_number],
       limit: 1
     job = Repo.one(query)
-    job.build_number + 1
+    job |> inc_build_number
+  end
+
+  def inc_build_number nil do
+    1
+  end
+
+  def inc_build_number job do
+   job.build_number + 1
   end
 end
