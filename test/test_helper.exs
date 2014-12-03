@@ -15,6 +15,23 @@ defmodule Pipeline.TestHelper do
   alias Domain.Pipeline
   alias Domain.Task
 
+  def assert_with_poll(function) do
+    assert_with_poll function, 20
+  end
+
+  defp assert_with_poll(function, count) do
+    if !function.() do
+      IO.puts "Assert polling..."
+      :timer.sleep 200
+      assert_with_poll(function, count - 1)
+    end
+    :ok
+  end
+
+  defp assset_with_poll(_, 0) do
+    :timed_out
+  end
+
   def create_job pipeline_json, path do
     job = %Job{
       path: path,

@@ -28,6 +28,7 @@ defmodule TaskScheduler do
 
     {:ok, pipeline_json} = JSX.encode pipeline
     %Job{
+      name: List.last(subtask_path),
       path: subtask_path,
       status: "scheduled",
       build_number: next_build_number,

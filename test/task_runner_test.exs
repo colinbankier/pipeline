@@ -13,7 +13,6 @@ defmodule TaskRunnerTest do
     job = create_job(simple_pipeline_json, ["Simple Pipeline", "task 1"])
 
     run_job = TaskRunner.run job.id
-    :timer.sleep 1000
     job = Repo.get(Job, job.id)
     IO.inspect job
 
