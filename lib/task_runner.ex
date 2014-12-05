@@ -32,10 +32,18 @@ defmodule TaskRunner do
     if job.status == "success" do
       next_path = Pipeline.find_next_task job.path, pipeline
       IO.puts "trigger next #{next_path}"
-      TaskScheduler.trigger_task(pipeline, next_path)
+      trigger_next_path pipeline, next_path
     else
       IO.puts "skipping trigger"
     end
+  end
+
+  def trigger_next_path pipeline, nil do
+   IO.puts "End of pipeline"
+  end
+
+  def trigger_next_path pipeline, path do
+    TaskScheduler.trigger_task(pipeline, path)
   end
 
   def _exec task = %Task{}, job, working_dir do

@@ -12,8 +12,7 @@ defmodule TaskScheduler do
   end
 
   def schedule_job job do
-    {:ok, pid} = ElixirTalk.connect()
-    ElixirTalk.put(pid, to_string(job.id))
+    TaskRunner.run job.id
     job
   end
 

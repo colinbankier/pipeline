@@ -27,7 +27,6 @@ defmodule Pipeline.Mixfile do
       { :exjsx, github: "talentdeficit/jsex" },
       {:phoenix, [github: "phoenixframework/phoenix", ref: "v0.6.1"]},
       {:yamerl, [github: "yakaz/yamerl"]},
-      {:elixir_talk, [github: "jsvisa/elixir_talk"]},
       {:cowboy, "~> 1.0"},
       {:httpoison, "~> 0.4"}
     ]

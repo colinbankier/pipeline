@@ -2,7 +2,6 @@
   "cowlib": {:hex, :cowlib, "1.0.0"},
   "decimal": {:hex, :decimal, "0.2.5"},
   "ecto": {:hex, :ecto, "0.2.5"},
-  "elixir_talk": {:git, "git://github.com/jsvisa/elixir_talk.git", "65c66f440a7c5d53282bfb959c35bd9ab4b98c55", []},
   "exec": {:git, "git://github.com/saleyn/erlexec.git", "a84d95f46422163c24ffef7a123efe9b15d56253", [ref: "a84d95f46422163c24ffef7a123efe9b15d56253"]},
   "exjsx": {:git, "git://github.com/talentdeficit/jsex.git", "d8fcc5f55bdcb8ea41e5688d3b2288ae783c3a02", []},
   "hackney": {:hex, :hackney, "0.14.3"},

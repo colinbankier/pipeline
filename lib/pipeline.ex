@@ -10,7 +10,6 @@ defmodule Pipeline do
       # Define workers and child supervisors to be supervised
       # worker(Pipeline.Worker, [arg1, arg2, arg3])
       worker(Repo, []),
-      worker(Worker, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
