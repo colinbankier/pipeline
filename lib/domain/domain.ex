@@ -63,7 +63,7 @@ defmodule Domain do
         end)
         find(tail, task)
       else
-        nil
+        raise "No such task"
       end
     end
 

@@ -2,6 +2,9 @@ import Pipeline.TestHelper
 
 defmodule TaskSchedulerTest do
   use ExUnit.Case
+  alias Models.Job
+  alias Domain.Pipeline
+  alias Domain.Task
   alias Results.PipelineResult
   alias Results.TaskResult
 
@@ -24,9 +27,22 @@ defmodule TaskSchedulerTest do
       %TaskResult{name: "task 3", output: "3\n", status: :success},
       ]
     }
-    assert_with_poll fn() ->
+    wait_for fn() ->
       Results.pipeline_status(pipeline) == expected
     end
     assert Results.pipeline_status(pipeline) == expected
+  end
+
+  test "Schedule a successful job" do
+    pipeline = %Pipeline{name: "Successful Pipeline", tasks:
+      [ %Task{name: "Success", command: "echo 1"} ]
+      }
+    job = TaskScheduler.trigger_task(pipeline, ["Successful Pipeline", "Success"])
+
+    wait_for fn() ->
+      Results.find_job(job.id).status == "success"
+    end
+
+    assert Results.find_job(job.id).output == "1\n"
   end
 end

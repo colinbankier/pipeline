@@ -15,21 +15,28 @@ defmodule Pipeline.TestHelper do
   alias Domain.Pipeline
   alias Domain.Task
 
-  def assert_with_poll(function) do
-    assert_with_poll function, 20
+  @wait_interval 200
+
+  def wait_for(function) do
+    wait_for function, 5000
   end
 
-  defp assert_with_poll(function, count) do
+  def wait_for(function, time) do
     if !function.() do
       IO.puts "Assert polling..."
-      :timer.sleep 200
-      assert_with_poll(function, count - 1)
+      :timer.sleep @wait_interval
+      wait_for(function, time - @wait_interval)
     end
     :ok
   end
 
-  defp assset_with_poll(_, 0) do
+  def wait_for(_, time) when time <= 0 do
     :timed_out
+  end
+
+  def create_job pipeline = %Pipeline{}, path do
+    {:ok, pipeline_json} = JSX.encode(pipeline)
+    create_job pipeline_json, path
   end
 
   def create_job pipeline_json, path do

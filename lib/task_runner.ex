@@ -74,17 +74,17 @@ defmodule TaskRunner do
       :normal -> 0
     end
     {:status, exit_code} = :exec.status(get_exec_status.(status))
-    job = %{job | status: "success"}
+    job = %{job | status: status_from_int(exit_code)}
     :ok = Repo.update(job)
     job
   end
 
-  def status_sym_from_int 0 do
-    :ok
+  def status_from_int 0 do
+    to_string :success
   end
 
-  def status_sym_from_int _ do
-    :error
+  def status_from_int _ do
+    to_string :failed
   end
 
   def process_message job, {source, ospid, output} do

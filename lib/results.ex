@@ -16,6 +16,10 @@ defmodule Results do
     fetch_job_results pipeline, []
   end
 
+  def find_job job_id do
+    Repo.get(Job, job_id)
+  end
+
   defp fetch_job_results(pipeline = %Pipeline{}, parent_path) do
     path = append(parent_path, pipeline.name)
     job_results = Enum.map pipeline.tasks, fn(task) ->

@@ -13,7 +13,7 @@ defmodule Pipeline.Mixfile do
   # Configuration for the OTP application
   def application do
     [
-      applications: [:phoenix, :cowboy, :logger, :exec, :postgrex, :ecto, :yamerl, :elixir_talk],
+      applications: [:phoenix, :cowboy, :logger, :exec, :postgrex, :ecto, :yamerl],
       mod: {Pipeline, []}
     ]
   end

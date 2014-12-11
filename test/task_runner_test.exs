@@ -2,7 +2,6 @@ import Pipeline.TestHelper
 
 defmodule TaskRunnerTest do
   use ExUnit.Case
-  import Poll
   alias Models.Job
   alias Domain.Pipeline
   alias Domain.Task
@@ -14,10 +13,22 @@ defmodule TaskRunnerTest do
 
     run_job = TaskRunner.run job.id
     job = Repo.get(Job, job.id)
-    IO.inspect job
 
     assert job.status == "success"
     assert job.output == "1\n"
+  end
+
+  test "A failing job exits with output and failure status" do
+    pipeline = %Pipeline{name: "Failed Pipeline", tasks:
+      [ %Task{name: "Error", command: "echo exiting; exit 1"} ]
+      }
+    job = create_job(pipeline, ["Failed Pipeline", "Error"])
+
+    run_job = TaskRunner.run job.id
+    job = Repo.get(Job, job.id)
+
+    assert job.status == "failed"
+    assert job.output == "exiting\n"
   end
 
   test "Running a pipeline directly fails gracefully" do
