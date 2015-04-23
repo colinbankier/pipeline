@@ -1,4 +1,0 @@
-Questions:
-
-- Create entire pipeline state upfront and pass down, or build recursively?
-- Pipeline/Task Result include command def? What happens if change def before run? Link to def?

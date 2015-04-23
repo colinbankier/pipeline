@@ -1,5 +1,5 @@
 defmodule Pipeline.PageController do
-  use Phoenix.Controller
+  use Pipeline.Web, :controller
 
   plug :action
 

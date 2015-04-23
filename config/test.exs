@@ -1,8 +1,19 @@
 use Mix.Config
 
-config :phoenix, Pipeline.Router,
-  http: [port: System.get_env("PORT") || 4000],
-  debug_errors: true
+# We don't run a server during test. If one is required,
+# you can enable the server option below.
+config :pipeline, Pipeline.Endpoint,
+  http: [port: 4001],
+  server: false
 
-# Enables code reloading for development
-config :phoenix, :code_reloader, true
+# Print only warnings and errors during test
+config :logger, level: :warn
+
+# Configure your database
+config :pipeline, Pipeline.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "postgres",
+  password: "postgres",
+  database: "pipeline_test",
+  size: 1,
+  max_overflow: false

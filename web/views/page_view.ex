@@ -1,3 +1,3 @@
 defmodule Pipeline.PageView do
-  use Pipeline.View
+  use Pipeline.Web, :view
 end
