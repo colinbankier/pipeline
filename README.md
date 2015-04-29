@@ -38,6 +38,10 @@ use another tool purely for CI if you wish, using pipeline for the deployment st
 Pipeline simply allows you to orchestrate running commands. It doesn't care what those commands are, so can perform any
 action in any technology you wish.
 
+### Versioned Configuration Files
+Pipelines are defined in one or more plain text files that can easily be version controlled. They can easily be
+expressed in YAML or JSON, but for simplicity can just be expressed as an Elixir data structure.
+
 
 # Developing
 Pipeline uses Phoenix for it's HTTP API.
