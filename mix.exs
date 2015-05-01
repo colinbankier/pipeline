@@ -31,6 +31,7 @@ defmodule Pipeline.Mixfile do
     [{:phoenix, "~> 0.11.0"},
      {:phoenix_ecto, "~> 0.3"},
      {:postgrex, ">= 0.0.0"},
+     {:exjsx, "> 0.0.0"},
      {:phoenix_live_reload, "~> 0.3"},
      {:yamerl, [github: "yakaz/yamerl"]},
      {:cowboy, "~> 1.0"}]

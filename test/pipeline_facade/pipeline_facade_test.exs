@@ -6,11 +6,13 @@ defmodule PipelineFacadeTest do
     pipelines = Facade.pipelines
 
     assert pipelines == [
-      name: "Simple Pipeline",
-      tasks: [
-        [name: "task 1"],
-        [name: "task 2"],
-        [name: "task 3"]
+      [
+        name: "Simple Pipeline",
+        tasks: [
+          [name: "task 1"],
+          [name: "task 2"],
+          [name: "task 3"]
+        ]
       ]
     ]
   end
