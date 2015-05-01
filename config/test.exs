@@ -12,8 +12,8 @@ config :logger, level: :warn
 # Configure your database
 config :pipeline, Pipeline.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
+  username: "pipeline",
+  password: "pipeline",
   database: "pipeline_test",
   size: 1,
   max_overflow: false
