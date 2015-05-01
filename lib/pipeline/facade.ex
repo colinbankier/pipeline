@@ -1,5 +1,8 @@
 defmodule Pipeline.Facade do
-  def pipelines do
+  alias Pipeline.Presenter
 
+  def pipelines do
+    Pipeline.Reader.list_pipelines
+    |> Presenter.top_level
   end
 end
