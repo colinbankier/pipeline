@@ -17,7 +17,7 @@ defmodule Pipeline.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [mod: {Pipeline, []},
-     applications: [:phoenix, :cowboy, :logger, :ecto, :yamerl]]
+     applications: [:phoenix, :cowboy, :logger, :ecto, :yamerl, :exec]]
   end
 
   # Specifies which paths to compile per environment
@@ -31,6 +31,8 @@ defmodule Pipeline.Mixfile do
     [{:phoenix, "~> 0.11.0"},
      {:phoenix_ecto, "~> 0.3"},
      {:postgrex, ">= 0.0.0"},
+     {:exec, [github: "saleyn/erlexec", app: "ebin/exec.app",
+       ref: "a84d95f46422163c24ffef7a123efe9b15d56253"]},
      {:exjsx, "> 0.0.0"},
      {:phoenix_live_reload, "~> 0.3"},
      {:yamerl, [github: "yakaz/yamerl"]},
