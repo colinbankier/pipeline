@@ -10,7 +10,7 @@ defmodule Pipeline do
       # Start the endpoint when the application starts
       supervisor(Pipeline.Endpoint, []),
       # Start the Ecto repository
-      # worker(Pipeline.Repo, []),
+      worker(Pipeline.Repo, []),
       # Here you could define other workers and supervisors as children
       # worker(Pipeline.Worker, [arg1, arg2, arg3]),
     ]
