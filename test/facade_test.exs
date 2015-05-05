@@ -23,7 +23,7 @@ defmodule PipelineFacadeTest do
     {:ok, build_number} = Facade.run "Simple Pipeline"
     poll_until_complete("Simple Pipeline", build_number, @poll_attempts)
 
-    result = Facade.result "Simple Pipeline", build_number
+    result = Facade.status "Simple Pipeline", build_number
     expected = [
       name: "Simple Pipeline",
       status: :success,
@@ -42,6 +42,10 @@ defmodule PipelineFacadeTest do
     ]
 
     assert result == expected
+  end
+
+  def poll_until_complete(pipeline_name, build_number, count) when count <= 0 do
+
   end
 
   def poll_until_complete(pipeline_name, build_number, count) do

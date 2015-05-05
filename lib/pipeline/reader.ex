@@ -5,9 +5,10 @@ defmodule Pipeline.Reader do
     |> read_pipeline_files
   end
 
-  def find_by_path path_string do
-    Enum.find list_pipelines, fn(pipeline) ->
-      pipeline.source_repo == path_string
+  def find_by_name pipeline_name do
+    list_pipelines
+    |> Enum.find fn(pipeline) ->
+      pipeline.name == pipeline_name
     end
   end
 
