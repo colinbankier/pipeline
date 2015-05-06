@@ -17,8 +17,16 @@ defmodule Pipeline.Results do
     fetch_job_results pipeline, []
   end
 
+  def pipeline_status pipeline do
+    fetch_job_results pipeline, []
+  end
+
   def find_job job_id do
     Repo.get(Job, job_id)
+  end
+
+  defp pipeline_result(pipeline, task_results) do
+    %PipelineResult{name: pipeline.name, tasks: task_results, status: :success}
   end
 
   defp fetch_job_results(pipeline = %Pipeline{}, parent_path) do
@@ -27,10 +35,6 @@ defmodule Pipeline.Results do
       fetch_job_results(task, path)
     end
     pipeline_result pipeline, job_results
-  end
-
-  defp pipeline_result(pipeline, task_results) do
-    %PipelineResult{name: pipeline.name, tasks: task_results, status: :success}
   end
 
   defp fetch_job_results(task = %Task{}, parent_path) do

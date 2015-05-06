@@ -33,18 +33,18 @@ defmodule TaskRunner do
     if job.status == "success" do
       next_path = Pipeline.find_next_task job.path, pipeline
       IO.puts "trigger next #{next_path}"
-      trigger_next_path pipeline, next_path
+      trigger_next_path pipeline, next_path, job.build_number
     else
       IO.puts "skipping trigger"
     end
   end
 
-  def trigger_next_path pipeline, nil do
+  def trigger_next_path pipeline, nil, _ do
    IO.puts "End of pipeline"
   end
 
-  def trigger_next_path pipeline, path do
-    TaskScheduler.trigger_task(pipeline, path)
+  def trigger_next_path pipeline, path, build_number do
+    TaskScheduler.trigger_task(pipeline, path, build_number)
   end
 
   def _exec task = %Task{}, job, working_dir do
@@ -68,6 +68,17 @@ defmodule TaskRunner do
     handle_exit job, pid, status
   end
 
+  def process_message job, {source, ospid, output} do
+    job = %{ job | output: job.output <> output}
+    listen job
+  end
+
+  def process_message job, message do
+    IO.puts "Ignoring unmatched message:"
+    IO.inspect message
+    listen job
+  end
+
   def handle_exit job, pid, status do
     get_exec_status = fn
       {:exit_status, exec_status} -> exec_status
@@ -84,16 +95,5 @@ defmodule TaskRunner do
 
   def status_from_int _ do
     to_string :failed
-  end
-
-  def process_message job, {source, ospid, output} do
-    job = %{ job | output: job.output <> output}
-    listen job
-  end
-
-  def process_message job, message do
-    IO.puts "Ignoring unmatched message:"
-    IO.inspect message
-    listen job
   end
 end
