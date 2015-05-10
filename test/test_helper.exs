@@ -7,6 +7,7 @@ Ecto.Adapters.SQL.begin_test_transaction(Pipeline.Repo)
 
 defmodule Pipeline.TestHelper do
   alias Pipeline.Repo
+  alias Pipeline.TaskScheduler
   alias Domain.Pipeline
   alias Domain.Task
   alias Models.Job
@@ -31,25 +32,21 @@ defmodule Pipeline.TestHelper do
   end
 
   def create_job pipeline = %Pipeline{}, path do
-    {:ok, pipeline_json} = JSX.encode(pipeline)
-    create_job pipeline_json, path
-  end
-
-  def create_job pipeline_json, path do
-    job = %Job{
-      path: path,
-      status: "scheduled",
-      build_number: Job.next_build_number,
-      run_number: 1,
-      pipeline_json: pipeline_json
-    } |>
-    Repo.insert
+    build = TaskScheduler.create_build(pipeline)
+    TaskScheduler.create_job(pipeline, path, build)
+    |> Repo.insert
   end
 
   def run_task pipeline_json, path do
     job = create_job(simple_pipeline_json, path)
     TaskRunner.run job.id
     Repo.get(Job, job.id)
+  end
+
+  def simple_task_json do
+    """
+      { "name": "task 1", "command": "echo 1" }
+    """
   end
 
   def simple_pipeline_json do

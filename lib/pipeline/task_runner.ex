@@ -1,5 +1,7 @@
 defmodule TaskRunner do
+  import Ecto.Model
   alias Models.Job
+  alias Models.Build
   alias Pipeline.Repo
   alias Pipeline.TaskScheduler
   alias Domain.Pipeline
@@ -24,8 +26,12 @@ defmodule TaskRunner do
 
   def _run job do
     working_dir = "/"
-    {:ok, pipeline} = Pipeline.from_json job.pipeline_json
-    completed_job = job.path |> Pipeline.find(pipeline) |> _exec(job, working_dir)
+    {:ok, task} = Task.from_json job.task_json
+    completed_job = task |> _exec(job, working_dir)
+
+    build = Repo.one assoc(job, :build)
+
+    {:ok, pipeline} = Pipeline.from_json build.pipeline_json
     trigger_next completed_job, pipeline
   end
 

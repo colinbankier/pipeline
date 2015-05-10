@@ -1,6 +1,10 @@
 defmodule Domain do
   defmodule Task do
     defstruct type: :task, id: nil, name: nil, command: nil
+
+    def from_json json do
+      Domain.Pipeline.from_json json
+    end
   end
 
   defmodule Pipeline do

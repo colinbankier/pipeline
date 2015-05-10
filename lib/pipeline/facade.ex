@@ -12,7 +12,7 @@ defmodule Pipeline.Facade do
   def run(path = [pipeline_name | _], build_number) when is_list(path) do
     job = pipeline_name
     |> Reader.find_by_name
-    |> TaskScheduler.trigger_task(path)
+    |> TaskScheduler.trigger_task(path, build_number)
 
     {:ok, job.build_number}
   end
@@ -37,5 +37,12 @@ defmodule Pipeline.Facade do
     |> Reader.find_by_name
     |> Results.pipeline_status(build_number)
     |> Presenter.as_keyword
+  end
+
+  def status_history(pipeline_name) do
+    pipeline_name
+    |> Reader.find_by_name
+    |> Results.pipeline_status_history
+    |> Enum.map &Presenter.as_keyword/1
   end
 end

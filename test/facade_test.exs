@@ -52,9 +52,7 @@ defmodule PipelineFacadeTest do
     {:ok, build_number_2} = Facade.run ["Simple Pipeline", "task 2"], build_number_2
     poll_until_complete("Simple Pipeline", build_number_2, @poll_attempts)
 
-    assert build_number_2 = build_number_1 + 1
-
-    result = Facade.status "Simple Pipeline"
+    result = Facade.status_history "Simple Pipeline"
     expected = [
       [
         name: "Simple Pipeline",
@@ -94,12 +92,13 @@ defmodule PipelineFacadeTest do
   end
 
   def poll_until_complete(pipeline_name, build_number, count) when count <= 0 do
-
+    raise "poll timed out"
   end
 
   def poll_until_complete(pipeline_name, build_number, count) do
-    case Facade.status(pipeline_name, build_number) do
-      {:ok, pipeline} -> :ok
+    result = Facade.status(pipeline_name, build_number)
+    case result[:status] do
+      :success -> :ok
       _ ->
         :timer.sleep 100
         poll_until_complete(pipeline_name, build_number, count - 1)

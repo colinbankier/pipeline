@@ -13,7 +13,7 @@ defmodule TaskSchedulerTest do
 
   test "Runs entire pipeline and stores results." do
     pipeline = simple_pipeline
-    job = pipeline |> TaskScheduler.trigger_task ["Simple Pipeline"]
+    job = pipeline |> TaskScheduler.trigger_build
 
     expected = %PipelineResult{name: "Simple Pipeline",
     status: :success,
@@ -40,7 +40,7 @@ defmodule TaskSchedulerTest do
     pipeline = %Pipeline{name: "Successful Pipeline", tasks:
       [ %Task{name: "Success", command: "echo 1"} ]
       }
-    job = TaskScheduler.trigger_task(pipeline, ["Successful Pipeline", "Success"])
+    job = TaskScheduler.trigger_build(pipeline)
 
     wait_for fn() ->
       Results.find_job(job.id).status == "success"

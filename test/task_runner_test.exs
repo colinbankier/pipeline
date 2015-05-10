@@ -10,7 +10,7 @@ defmodule TaskRunnerTest do
   alias Result.TaskResult
 
   test "Runs job from DB" do
-    job = create_job(simple_pipeline_json, ["Simple Pipeline", "task 1"])
+    job = create_job(simple_pipeline, ["Simple Pipeline", "task 1"])
 
     run_job = TaskRunner.run job.id
     job = Repo.get(Job, job.id)
