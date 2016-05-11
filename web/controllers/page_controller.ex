@@ -1,7 +1,5 @@
-defmodule Pipeline.PageController do
-  use Pipeline.Web, :controller
-
-  plug :action
+defmodule PipelineApp.PageController do
+  use PipelineApp.Web, :controller
 
   def index(conn, _params) do
     render conn, "index.html"

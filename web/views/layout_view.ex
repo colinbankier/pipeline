@@ -1,3 +1,3 @@
-defmodule Pipeline.LayoutView do
-  use Pipeline.Web, :view
+defmodule PipelineApp.LayoutView do
+  use PipelineApp.Web, :view
 end

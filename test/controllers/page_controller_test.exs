@@ -1,8 +1,8 @@
-defmodule Pipeline.PageControllerTest do
-  use Pipeline.ConnCase
+defmodule PipelineApp.PageControllerTest do
+  use PipelineApp.ConnCase
 
-  test "GET /" do
-    conn = get conn(), "/"
-    assert conn.resp_body =~ "Welcome to Phoenix!"
+  test "GET /", %{conn: conn} do
+    conn = get conn, "/"
+    assert html_response(conn, 200) =~ "Welcome to Phoenix!"
   end
 end

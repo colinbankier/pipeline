@@ -6,12 +6,12 @@
 use Mix.Config
 
 # Configures the endpoint
-config :pipeline, Pipeline.Endpoint,
+config :pipeline_app, PipelineApp.Endpoint,
   url: [host: "localhost"],
-  root: Path.expand("..", __DIR__),
-  secret_key_base: "i57KQWQ/Imq35umq63cauw/N5+nI5L72dZQw4pY67u9lDSf3UGm/VbOPIwMdXl/i",
-  debug_errors: false,
-  pubsub: [name: Pipeline.PubSub,
+  root: Path.dirname(__DIR__),
+  secret_key_base: "RoOWC4hrNIpC4ylzkblEn+p8JeF43ewG7Ej6nvHdPNoIlK2Aj5J43YcLYZxJ8kiV",
+  render_errors: [accepts: ~w(html json)],
+  pubsub: [name: PipelineApp.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
@@ -22,3 +22,8 @@ config :logger, :console,
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
+
+# Configure phoenix generators
+config :phoenix, :generators,
+  migration: true,
+  binary_id: false

@@ -1,12 +1,12 @@
-defmodule Pipeline.Web do
+defmodule PipelineApp.Web do
   @moduledoc """
   A module that keeps using definitions for controllers,
   views and so on.
 
   This can be used in your application as:
 
-      use Pipeline.Web, :controller
-      use Pipeline.Web, :view
+      use PipelineApp.Web, :controller
+      use PipelineApp.Web, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -18,7 +18,11 @@ defmodule Pipeline.Web do
 
   def model do
     quote do
-      use Ecto.Model
+      use Ecto.Schema
+
+      import Ecto
+      import Ecto.Changeset
+      import Ecto.Query, only: [from: 1, from: 2]
     end
   end
 
@@ -26,13 +30,12 @@ defmodule Pipeline.Web do
     quote do
       use Phoenix.Controller
 
-      # Alias the data repository and import query/model functions
-      alias Pipeline.Repo
-      import Ecto.Model
-      import Ecto.Query, only: [from: 2]
+      alias PipelineApp.Repo
+      import Ecto
+      import Ecto.Query, only: [from: 1, from: 2]
 
-      # Import URL helpers from the router
-      import Pipeline.Router.Helpers
+      import PipelineApp.Router.Helpers
+      import PipelineApp.Gettext
     end
   end
 
@@ -41,13 +44,20 @@ defmodule Pipeline.Web do
       use Phoenix.View, root: "web/templates"
 
       # Import convenience functions from controllers
-      import Phoenix.Controller, only: [get_flash: 2]
-
-      # Import URL helpers from the router
-      import Pipeline.Router.Helpers
+      import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
 
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
+
+      import PipelineApp.Router.Helpers
+      import PipelineApp.ErrorHelpers
+      import PipelineApp.Gettext
+    end
+  end
+
+  def router do
+    quote do
+      use Phoenix.Router
     end
   end
 
@@ -55,11 +65,10 @@ defmodule Pipeline.Web do
     quote do
       use Phoenix.Channel
 
-      # Alias the data repository and import query/model functions
-      alias Pipeline.Repo
-      import Ecto.Model
-      import Ecto.Query, only: [from: 2]
-
+      alias PipelineApp.Repo
+      import Ecto
+      import Ecto.Query, only: [from: 1, from: 2]
+      import PipelineApp.Gettext
     end
   end
 
