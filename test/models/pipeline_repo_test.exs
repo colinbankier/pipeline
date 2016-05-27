@@ -1,5 +1,6 @@
 defmodule PipelineApp.PipelineRepoTest do
   use PipelineApp.ModelCase
+  import TestHelper
 
   alias PipelineApp.PipelineRepo
 
@@ -14,5 +15,17 @@ defmodule PipelineApp.PipelineRepoTest do
   test "changeset with invalid attributes" do
     changeset = PipelineRepo.changeset(%PipelineRepo{}, @invalid_attrs)
     refute changeset.valid?
+  end
+
+  test "clones a pipeline repo to the configured directory" do
+    source_repo = init_git_repo("simple_pipeline")
+    working_dir = Application.get_env(:pipeline_app, :working_directory)
+    rm_repo(working_dir, "elixir-git-cli")
+    repo = %PipelineRepo{name: "test", repository_url: "https://github.com/tuvistavie/elixir-git-cli"}
+    git_repo = PipelineRepo.clone(repo)
+    expected_path = "#{working_dir}/elixir-git-cli"
+
+    assert git_repo.path == Path.join working_dir, "elixir-git-cli"
+    assert File.exists?(git_repo.path)
   end
 end

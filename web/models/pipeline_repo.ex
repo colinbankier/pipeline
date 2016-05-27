@@ -1,4 +1,5 @@
 defmodule PipelineApp.PipelineRepo do
+  alias PipelineApp.PipelineRepo
   use PipelineApp.Web, :model
 
   schema "pipeline_repos" do
@@ -20,5 +21,20 @@ defmodule PipelineApp.PipelineRepo do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
+  end
+
+  def clone(repo = %PipelineRepo{}) do
+    working_dir = Application.get_env(:pipeline_app, :working_directory)
+    if not File.exists?(working_dir) do
+      File.mkdir_p!(working_dir)
+    end
+    File.cd! working_dir
+    target_dir = repo.repository_url |> Path.basename |> Path.rootname |> Path.expand
+    if File.exists?(target_dir) do
+      %Git.Repository{path: target_dir}
+    else
+      {:ok, repo} = Git.clone repo.repository_url
+      repo
+    end
   end
 end
