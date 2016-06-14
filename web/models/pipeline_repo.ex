@@ -37,4 +37,8 @@ defmodule PipelineApp.PipelineRepo do
       repo
     end
   end
+
+  def read(repo = %PipelineRepo{}) do
+    "foo"
+  end
 end

@@ -19,13 +19,13 @@ defmodule PipelineApp.PipelineRepoTest do
 
   test "clones a pipeline repo to the configured directory" do
     source_repo = init_git_repo("simple_pipeline")
-    IO.inspect source_repo
+    repo_name = String.split(source_repo, "/") |> List.last
     working_dir = Application.get_env(:pipeline_app, :working_directory)
-    rm_repo(working_dir, "simple_pipeline")
-    repo = %PipelineRepo{name: "test", repository_url: source_repo}
+    rm_repo(working_dir, repo_name)
+    repo = %PipelineRepo{name: "Simple Pipeline", repository_url: source_repo}
     git_repo = PipelineRepo.clone(repo)
 
-    assert git_repo.path == Path.join working_dir, "simple_pipeline"
+    assert git_repo.path == Path.join working_dir, repo_name
     assert File.exists?(git_repo.path)
   end
 end

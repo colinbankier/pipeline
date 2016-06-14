@@ -6,6 +6,7 @@ Ecto.Adapters.SQL.begin_test_transaction(PipelineApp.Repo)
 
 defmodule TestHelper do
   use ExUnit.Case
+  @root_dir File.cwd!
 
   def format_errors(changeset) do
     changeset.errors
@@ -20,14 +21,12 @@ defmodule TestHelper do
 
   def init_git_repo(name) do
     remote_dir = Application.get_env(:pipeline_app, :remote_repo_directory)
-    target_dir = Path.join(remote_dir, name)
+    target_dir = Path.join(remote_dir, name <> UUID.uuid1)
     if not File.exists?(remote_dir) do
       File.mkdir_p(remote_dir)
     end
-    if File.exists?(target_dir) do
-      File.rm_rf!(target_dir)
-    end
     source_dir = Path.join "test/resources", name
+    File.cd! @root_dir
     File.cp_r! source_dir, target_dir
     File.cd! target_dir
     repo = Git.init!
