@@ -19,6 +19,21 @@ defmodule TestHelper do
   end
 
   def init_git_repo(name) do
+    remote_dir = Application.get_env(:pipeline_app, :remote_repo_directory)
+    target_dir = Path.join(remote_dir, name)
+    if not File.exists?(remote_dir) do
+      File.mkdir_p(remote_dir)
+    end
+    if File.exists?(target_dir) do
+      File.rm_rf!(target_dir)
+    end
+    source_dir = Path.join "test/resources", name
+    File.cp_r! source_dir, target_dir
+    File.cd! target_dir
+    repo = Git.init!
+    repo |> Git.add(".")
+    repo |> Git.commit("Commit it.")
 
+    repo.path
   end
 end

@@ -19,13 +19,13 @@ defmodule PipelineApp.PipelineRepoTest do
 
   test "clones a pipeline repo to the configured directory" do
     source_repo = init_git_repo("simple_pipeline")
+    IO.inspect source_repo
     working_dir = Application.get_env(:pipeline_app, :working_directory)
-    rm_repo(working_dir, "elixir-git-cli")
-    repo = %PipelineRepo{name: "test", repository_url: "https://github.com/tuvistavie/elixir-git-cli"}
+    rm_repo(working_dir, "simple_pipeline")
+    repo = %PipelineRepo{name: "test", repository_url: source_repo}
     git_repo = PipelineRepo.clone(repo)
-    expected_path = "#{working_dir}/elixir-git-cli"
 
-    assert git_repo.path == Path.join working_dir, "elixir-git-cli"
+    assert git_repo.path == Path.join working_dir, "simple_pipeline"
     assert File.exists?(git_repo.path)
   end
 end

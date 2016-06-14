@@ -1,7 +1,8 @@
 use Mix.Config
 
 config :pipeline_app,
-  working_directory: Path.join(File.cwd!, "_test")
+  working_directory: Path.join(File.cwd!, "_test/cwd"),
+  remote_repo_directory: Path.join(File.cwd!, "_test/remote")
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
